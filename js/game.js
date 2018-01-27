@@ -38,7 +38,8 @@ window.onload = function() {
     let iTimeTotal = 200;
 
     //支持五种输入 tap panup pandown panright panleft
-    var input_arr = ["panup","pandown","panright","tap","pandown"];
+    var vaild_input_type = ["panup","pandown","panright","panleft","tap"];
+    var input_arr = [];
 
     var type_map = {
       "panup"    : "mark1",
@@ -48,7 +49,6 @@ window.onload = function() {
       "tap"      : "mark5",
     }
 
-    hammerInit();
 
     //对hammerjs的手势增加额外检查
     function checkPanPype(ev) {
@@ -76,7 +76,7 @@ window.onload = function() {
         }
       }
       if (ev.type === "panleft") {
-        if (Math.abs(ev.angle) > (180 - toll_rad)) {
+        if (Math.abs(ev.angle) < (180 - toll_rad)) {
           bOk = false;
         }
       }
@@ -99,7 +99,7 @@ window.onload = function() {
           now_need_type = input_arr[checkIndex];
           hammertime.on(now_need_type,evCB);
           checkGameOver();
-          console.log("checkIndex move %d",checkIndex);
+          console.log("checkIndex move %d type %s",checkIndex,input_arr[checkIndex]);
 
           iTimeTotal += 40;
         }
@@ -110,7 +110,6 @@ window.onload = function() {
           if (evType === now_need_type && checkPanPype(ev)) {
             throtMoveInfomation();
           } else {
-
             iTimeTotal -= 20;
             missSound.play();
           }
@@ -146,7 +145,7 @@ window.onload = function() {
         plante.width = plante.width * scale_size;
         plante.height = plante.height * scale_size;
         plante.selfRadius = plante.width / 2;
-        plante.rotation_speed = _.random(0.005,0.015);
+        plante.rotation_speed = _.random(0.002,0.03);
         setAnchorCenter(plante);
         return plante;
     }
@@ -227,6 +226,8 @@ window.onload = function() {
         const last_plant = plant_arr[plant_arr.length - 1];
         new_x = last_plant.x + _.random(50,100) * (_.shuffle([-1,1])[0]);
         new_y = last_plant.y + random_radius * 400 + 100; // 两个飞船的大小;
+
+        input_arr.push(vaild_input_type[_.random(0,4)]);
       }
       var plant = makePlante(random_ball,random_radius,new_x,new_y);
       if (_.random(0,1,true) < 0.3) {
@@ -261,12 +262,16 @@ window.onload = function() {
         timer.start();
 
         //load plante
-        for (let i = 0; i < 10; ++i) {
+        for (let i = 0; i < 50; ++i) {
           appendPlante();
         }
 
         //显示操作的图标
         addMarker();
+
+        console.log("checkIndex 0 type %s",input_arr[0]);
+
+        hammerInit();
 
 
         scoreText = createText(16, 16, '', { fontSize: '32px', fill: '#000'  });
@@ -313,7 +318,7 @@ window.onload = function() {
       if (!cp_to) {
         return 999;
       }
-      let now_dist = getXieLvJiaoduCha(cp_from,cp_to);
+      let now_dist = getDistance(cp_from,cp_to);
       return now_dist;
     };
 
@@ -354,7 +359,7 @@ window.onload = function() {
       const cp_from = sp_arr[checkIndex];
       const cp_to = sp_arr[checkIndex + 1];
 
-      if (now_dist < 999) {
+      if (now_dist < 200) {
         bTimeGap = true;
         marker_arr[checkIndex].visible = true;
         cp_from.children[0].visible = true;
