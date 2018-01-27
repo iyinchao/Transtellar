@@ -20,6 +20,9 @@ window.onload = function() {
     var canvasWrapper = document.querySelector('#canvas-wrapper')
     var game = new Phaser.Game(width, height, Phaser.AUTO, canvasWrapper, { preload: preload, create: create ,update: update, render: render}, true, true);
     window.$game = game;
+
+    initVue()
+
     var deviceRatio = window.devicePixelRatio || 1
 
     game.bGameOver = false;
@@ -72,7 +75,6 @@ window.onload = function() {
           }
           now_need_type = input_arr[checkIndex][iSingleTransIndex];
           console.log("now checkIndex %d type %s listen type %s",checkIndex,JSON.stringify(input_arr[checkIndex]),now_need_type);
-          document.getElementById("hitText").innerText = JSON.stringify(input_arr[checkIndex]);
         }
 
         //const throtMoveInfomation = _.throttle(moveInfomation,150);
@@ -263,7 +265,6 @@ window.onload = function() {
         addMarker();
 
         console.log("checkIndex 0 type %s",JSON.stringify(input_arr[0]));
-        document.getElementById("hitText").innerText = JSON.stringify(input_arr[0]);
 
         hammerInit();
 
