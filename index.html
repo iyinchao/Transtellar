@@ -9,12 +9,34 @@
     <script src="https://cdn.bootcss.com/phaser/2.6.2/phaser.min.js"></script>
     <script src="https://cdn.bootcss.com/lodash.js/4.17.4/lodash.min.js"></script>
     <script src="https://cdn.bootcss.com/hammer.js/2.0.8/hammer.min.js"></script>
+    <script src="lib/vue.js"></script>
     <script src="js/util_fun.js"></script>
     <script src="js/smoother.js"></script>
 </head>
 <body>
     <div id="canvas-wrapper"></div>
+    <div id="ui"></div>
+    <script type="text/x-template" id="vue-root">
+        <div id="ui">
+            <div class="ui-overlay"></div>
+            <div class="page" v-if="state === 'intro'">
+                <div class="logo-wrapper">
+                    <div class="planet">
+                    </div>
+                    <div class="title title-1">
+                    </div>
+                    <div class="title title-2">
+                    </div>
+                    <div class="pc-1"></div>
+                    <div class="pc-2"></div>
+                    <div class="pc-3"></div>
+                </div>
+            </div>
+            <div class="page" v-if="state === 'over'"></div>
+        </div>
+    </script>
     <script src="js/hammer.js"></script>
+    <script src="js/ui.js"></script>
     <script src="js/game.js"></script>
 </body>
 </html>

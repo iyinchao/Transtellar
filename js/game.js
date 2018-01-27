@@ -72,6 +72,7 @@ window.onload = function() {
           }
           now_need_type = input_arr[checkIndex][iSingleTransIndex];
           console.log("now checkIndex %d type %s listen type %s",checkIndex,JSON.stringify(input_arr[checkIndex]),now_need_type);
+          document.getElementById("hitText").innerText = JSON.stringify(input_arr[checkIndex]);
         }
 
         //const throtMoveInfomation = _.throttle(moveInfomation,150);
@@ -234,7 +235,7 @@ window.onload = function() {
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
         const resizeCallBack = _.throttle(function onResize(scale) {
           // FIXME: This causes repeat trigger
-          console.log(game.parent.clientWidth, game.parent.clientHeight)
+          // console.log(game.parent.clientWidth, game.parent.clientHeight)
           scale.setGameSize(
           game.parent.clientWidth * deviceRatio,
           game.parent.clientHeight * deviceRatio)
@@ -262,11 +263,12 @@ window.onload = function() {
         addMarker();
 
         console.log("checkIndex 0 type %s",JSON.stringify(input_arr[0]));
+        document.getElementById("hitText").innerText = JSON.stringify(input_arr[0]);
 
         hammerInit();
 
 
-        scoreText = createText(16, 16, '', { fontSize: '32px', fill: '#000'  });
+        scoreText = createText(450, 16, '', { fontSize: '32px', fill: '#000'  });
         timerText = createText(450, 16, '', { fontSize: '32px', fill: '#000'  });
         missText = createText(gwcx - 300, gwcy - 300, '', { fontSize: '32px', fill: '#FF3300'  });
         missText.visible = false;
@@ -427,7 +429,7 @@ window.onload = function() {
     function render() {
       finishAnimation();
 
-      game.debug.cameraInfo(game.camera, 32, 64)
+      //game.debug.cameraInfo(game.camera, 32, 64)
     }
 
 };
