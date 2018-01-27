@@ -10,6 +10,31 @@ window.onload = function() {
     let plant_2;
     var missSound;
     var hitSound;
+    hammerInit();
+
+    var bTimeGap = false;
+
+    var input_arr = ["tap","panleft","panright"]
+
+    function hammerInit() {
+      var hammertime = new Hammer(window.document, {});
+      const evDebonceCb = _.debounce((ev) => {
+        if (bTimeGap) {
+          const evType = ev.type;
+          if (evType === input_arr[checkIndex]) {
+            const iNowDist = parseInt(getNowDistance());
+            hitSound.play();
+            score += iNowDist;
+            checkIndex += 1;
+            checkGameOver();
+          } else {
+            missSound.play();
+          }
+          console.log("checkIndex move %d",checkIndex);
+        }
+      },0);
+      hammertime.on('tap panleft panright press', evDebonceCb);
+    }
 
     function preload () {
         //game.load.image('logo', 'image/phaser.png');
@@ -36,12 +61,18 @@ window.onload = function() {
       sprite.anchor.setTo(0.5,0.5);
     }
 
-    function addNewBot(texture) {
+    function addNewBot(texture,speed) {
       var s = game.add.sprite(0,0, texture);
       setAnchorCenter(s);
       s.scale.setTo(2, 2);
       s.animations.add('run');
       s.animations.play('run', 10, true);
+      s.selfRad = 0;
+      s.mSpeed = speed;
+      var boom = addBoom("boom");
+      boom.visible = false;
+      s.addChild(boom);
+      console.log(s);
       return s;
     }
 
@@ -51,43 +82,69 @@ window.onload = function() {
       return s;
     }
 
-    function getDistance(sp1,sp2) {
-      return Math.sqrt((sp1.x-sp2.x) * (sp1.x-sp2.x) + (sp1.y-sp2.y) *(sp1.y-sp2.y));
+    function attachRunner(sp,plant) {
+      sp.source_x = plant.x;
+      sp.source_y = plant.y;
+      sp.source_radius = plant.selfRadius;
+    }
+
+    let gwcx;
+    let gwcy;
+
+    function checkGameOver() {
+      if (checkIndex > 3) {
+        successText.visible = true;
+        return true;
+      } else {
+        return false;
+      }
     }
 
     function create () {
         game.stage.backgroundColor = "#4488AA";
         gwcx = game.world.centerX;
         gwcy = game.world.centerY;
-
-        music = game.add.audio('bgm');
-        music.play();
         
         hitSound = game.add.audio('hit_sound');
         missSound = game.add.audio('miss_sound');
 
         //load plante
-        p1_rad = radius * 0.8; 
-        p2_rad = radius * 0.4; 
-        plant_1 = makePlante("wizball",p1_rad,gwcx,gwcy);
-        plant_2 = makePlante("shinyball",p2_rad,gwcx + p1_rad + p2_rad ,gwcy - p1_rad - p2_rad);
+        p1_rad = 100; 
+        p2_rad = 40; 
+        plant_1 = makePlante("wizball",100,100,200);
+        plant_2 = makePlante("shinyball",50,300,200);
+        plant_3 = makePlante("wizball",80,500,200);
+        plant_4 = makePlante("shinyball",100,750,200);
+        plant_arr.push(plant_1);
+        plant_arr.push(plant_2);
+        plant_arr.push(plant_3);
+        plant_arr.push(plant_4);
 
-        btn = game.add.sprite(game.world.centerX + p1_rad, game.world.centerY - p1_rad, 'button');
-        setAnchorCenter(btn);
-        btn.scale.setTo(0.7, 0.7);
+        //speed 角速度
+        s1 = addNewBot("bot",0.05);
+        attachRunner(s1,plant_1);
 
-        s = addNewBot("bot");
-        s_boom = addBoom("boom");
-        s.addChild(s_boom);
-        s2 = addNewBot("bot");
-        s2_boom = addBoom("boom");
-        s2.addChild(s2_boom);
-        s2_boom.visible = false;
+        s2 = addNewBot("bot",0.03);
+        attachRunner(s2,plant_2);
 
-        scoreText = game.add.text(width - 300, 16, 'score: 0', { fontSize: '32px', fill: '#000'  });
+        s3 = addNewBot("bot",0.07);
+        attachRunner(s3,plant_3);
+
+        s4 = addNewBot("bot",0.06);
+        attachRunner(s4,plant_4);
+
+        sp_arr.push(s1);
+        sp_arr.push(s2);
+        sp_arr.push(s3);
+        sp_arr.push(s4);
+
+        scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000'  });
 
         missText = game.add.text(gwcx - 300, gwcy - 300, 'Miss', { fontSize: '32px', fill: '#FF3300'  });
         missText.visible = false;
+
+        successText = game.add.text(30, 30, 'Mission Complate', { fontSize: '80px', fill: '#FF3300'  });
+        successText.visible = false;
     }
 
     let ball_radius = 10;
@@ -95,64 +152,66 @@ window.onload = function() {
 
     var rad = 0;
     var s2_rad = 0;
-    var radius = 200;
     var cooldown = false;
+
+    var sp_arr = [];
+    var plant_arr = [];
+    var checkIndex = 0;
+
+    const getNowDistance = () => {
+      const cp_from = sp_arr[checkIndex];
+      const cp_to = sp_arr[checkIndex + 1];
+      if (!cp_to) {
+        return 999;
+      }
+      let now_dist = getDistance(cp_from,cp_to);
+      return now_dist;
+    };
     function update() {
+
+      if (checkGameOver()) {
+        return ;
+      }
+
+
+      scoreText.text = "Score: " + score;
+
       const worldCenterX = game.world.centerX;
       const worldCenterY = game.world.centerY;
 
       rotation_speed = 0.01;
       plant_1.rotation += rotation_speed;
       plant_2.rotation += rotation_speed;
+      plant_3.rotation += rotation_speed;
 
-      if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
-			{
-        if (cooldown) {
-        
-        } else {
-          cooldown = true;
-          setTimeout(function(){
-            cooldown = false;
-          },300);
-          console.log("keyboard down");
+      sp_arr.forEach((one) => {
+        one.children[0].visible = false;
+      });
 
-          let now_x = s.x - worldCenterX;
-          let now_y = s.y - worldCenterY;
-          let now_dist = getDistance(s,s2);
+      let now_dist = getNowDistance();
+      const cp_from = sp_arr[checkIndex];
+      const cp_to = sp_arr[checkIndex + 1];
 
-          console.log(now_dist);
-          if (now_dist < 80) {
-            s_boom.visible = !s_boom.visible;
-            s2_boom.visible = !s2_boom.visible;
-            score += 10;
-            hitSound.play();
-            scoreText.text = 'Score: ' + score;
-            missText.text = "Hit!";
-          } else {
-            missText.text = "Miss!";
-            missSound.play();
-          }
-          missText.visible = true;
-          setTimeout(() => {
-              missText.visible = false;
-          },300);
-        }
-			}
-      rad += 0.05;
-      s.x = worldCenterX + radius * Math.cos(rad);
-      s.y = worldCenterY + radius * Math.sin(rad);
+      if (now_dist < 200) {
+        bTimeGap = true;
+        cp_from.children[0].visible = true;
+        cp_to.children[0].visible = true;
+      } else {
+        bTimeGap = false;
+      }
 
-      s2_rad += 0.03;
-      s2_s_x = worldCenterX + plant_1.selfRadius + plant_2.selfRadius;
-      s2_s_y = worldCenterY - plant_1.selfRadius - plant_2.selfRadius;
-      s2_run_radius = plant_2.selfRadius * 1.2;
-      s2.x = s2_s_x + s2_run_radius * Math.cos(s2_rad);
-      s2.y = s2_s_y + s2_run_radius * Math.sin(s2_rad);
+      for (let i = 0, len = sp_arr.length; i < len; ++i) {
+        var sp = sp_arr[i];
+        sp.selfRad += sp.mSpeed;
+        var sp_run_radius = sp.source_radius * 1.2;
+        sp.x = sp.source_x + sp_run_radius * Math.cos(sp.selfRad);
+        sp.y = sp.source_y + sp_run_radius * Math.sin(sp.selfRad);
+      }
 
     }
 
     function render() {
-      game.debug.spriteInfo(s, 20, 32);
+      //game.debug.spriteInfo(s, 20, 32);
     }
 
 };
