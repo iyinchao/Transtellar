@@ -12,38 +12,89 @@ window.onload = function() {
     var missSound;
     var hitSound;
     var successText;
-    hammerInit();
 
     var bTimeGap = false;
 
-    var input_arr = ["tap","panleft","panright"]
+    var input_arr = ["panup","pandown","panright","panup","pandown"];
+
+
+    hammerInit();
+
+    //对hammerjs的手势增加额外检查
+    function checkPanPype(ev) {
+      let bOk = true;
+      console.log(ev);
+      if (ev.type === "pan") {
+        if (ev.distance > 30) {
+          bOk = false;
+        }
+      }
+      const toll_rad = 30;
+      if (ev.type === "panup") {
+        if (Math.abs(ev.angle - (-90)) > toll_rad) {
+          bOk = false;
+        }
+      }
+      if (ev.type === "pandown") {
+        if (Math.abs(ev.angle - (90)) > toll_rad) {
+          bOk = false;
+        }
+      }
+      if (ev.type === "panright") {
+        if (Math.abs(ev.angle) > toll_rad) {
+          bOk = false;
+        }
+      }
+      if (ev.type === "panleft") {
+        if (Math.abs(ev.angle) > (180 - toll_rad)) {
+          bOk = false;
+        }
+      }
+      return bOk;
+    }
 
     function hammerInit() {
       var hammertime = new Hammer(window.document, {});
-      const evDebonceCb = _.debounce((ev) => {
+
+      const evCB = (ev) => {
+        const evType = ev.type;
+        let now_need_type = input_arr[checkIndex];
+
+        function moveInfomation() {
+          hammertime.off(now_need_type,evCB);
+          hitSound.play();
+          const iNowDist = parseInt(getNowDistance());
+          score += iNowDist;
+          checkIndex += 1;
+          now_need_type = input_arr[checkIndex];
+          hammertime.on(now_need_type,evCB);
+          checkGameOver();
+          console.log("checkIndex move %d",checkIndex);
+        }
+
+        const throtMoveInfomation = _.throttle(moveInfomation,400);
+
         if (bTimeGap) {
-          const evType = ev.type;
-          if (evType === input_arr[checkIndex]) {
-            const iNowDist = parseInt(getNowDistance());
-            hitSound.play();
-            score += iNowDist;
-            checkIndex += 1;
-            checkGameOver();
+          if (evType === now_need_type && checkPanPype(ev)) {
+            throtMoveInfomation();
           } else {
             missSound.play();
           }
-          console.log("checkIndex move %d",checkIndex);
         }
-      },0);
-      hammertime.on('tap panleft panright', evDebonceCb);
+      }
+      hammertime.on(input_arr[0],evCB);
     }
 
     function preload () {
         //game.load.image('logo', 'image/phaser.png');
         game.load.atlasJSONHash('bot', 'assets/sprites/running_bot.png', 'assets/sprites/running_bot.json');
-        for (let i = 0 ; i < 6; ++i) {
+        for (let i = 1 ; i <= 6; ++i) {
           game.load.image(`ball${i}`, `assets/ball-${i}.png`);
         }
+        for (let i = 1 ; i <= 3; ++i) {
+          game.load.image(`mark${i}`, `assets/mark_${i}.png`);
+        }
+        game.load.image('ball-ring', 'assets/ball-ring-1.png');
         game.load.image('ship', 'assets/pc-1.png');
         game.load.image('boom', 'assets/sprites/diamond.png');
         game.load.image('star', 'assets/sprites/a.png');
@@ -54,11 +105,11 @@ window.onload = function() {
         game.load.audio('miss_sound', "assets/audio/shrink.mp3");
     }
 
-    function makePlante(texture,radius,s_x,s_y) {
+    function makePlante(texture,scale_size,s_x,s_y) {
         var plante = game.add.sprite(s_x,s_y,texture);
-        plante.width = radius * 2;
-        plante.height = radius * 2;
-        plante.selfRadius = radius;
+        plante.width = plante.width * scale_size;
+        plante.height = plante.height * scale_size;
+        plante.selfRadius = plante.width / 2;
         plante.rotation_speed = _.random(0.005,0.015);
         setAnchorCenter(plante);
         return plante;
@@ -74,8 +125,8 @@ window.onload = function() {
       s.mSpeed = speed;
       var boom = addBoom("boom");
       boom.visible = false;
+      boom.scale.setTo(3,3);
       s.addChild(boom);
-      console.log(s);
       return s;
     }
 
@@ -141,10 +192,12 @@ window.onload = function() {
         //load plante
         p1_rad = 100; 
         p2_rad = 40; 
-        plant_1 = makePlante("ball1",100,100,200);
-        plant_2 = makePlante("ball2",50,300,200);
-        plant_3 = makePlante("ball3",80,500,200);
-        plant_4 = makePlante("ball4",100,750,200);
+        plant_1 = makePlante("ball1",0.4,100,200);
+        mark_1 = makePlante("mark1",0.1)
+        plant_2 = makePlante("ball2",0.2,300,200);
+        plant_3 = makePlante("ball3",0.3,500,200);
+        ball_ring = makePlante("ball-ring",0.3,500,200);
+        plant_4 = makePlante("ball4",0.25,750,200);
         plant_arr.push(plant_1);
         plant_arr.push(plant_2);
         plant_arr.push(plant_3);
@@ -168,17 +221,19 @@ window.onload = function() {
         sp_arr.push(s3);
         sp_arr.push(s4);
 
+        scoreText = createText(16, 16, '', { fontSize: '32px', fill: '#000'  });
+        timerText = createText(500, 16, '', { fontSize: '32px', fill: '#000'  });
+        missText = createText(gwcx - 300, gwcy - 300, '', { fontSize: '32px', fill: '#FF3300'  });
+        missText.visible = false;
+        successText = createText(30, 30, '', { fontSize: '80px', fill: '#FF3300'  });
+        successText.visible = false;
         dommyGetFont(() => {
-          scoreText = createText(16, 16, 'score: 0', { fontSize: '32px', fill: '#000'  });
-          timerText = createText(500, 16, 'Timer Left: 0', { fontSize: '32px', fill: '#000'  });
-          missText = createText(gwcx - 300, gwcy - 300, 'Miss', { fontSize: '32px', fill: '#FF3300'  });
-          missText.visible = false;
-
-          successText = createText(30, 30, 'Mission Complate', { fontSize: '80px', fill: '#FF3300'  });
-          successText.visible = false;
+          scoreText.text = "Score : 0";
+          missText.text = "Miss";
+          successText.text = "Mission Complate";
         })
 
-        finish_sp = game.add.sprite(0,-500,"finish_sp");
+        finish_sp = game.add.sprite(0,-500,"finish_bg");
         finish_sp.width = width;
         finish_sp.height = height;
     }
@@ -259,8 +314,8 @@ window.onload = function() {
 
     function setLeftTime() {
       const elapseTime = game.time.totalElapsedSeconds();
-      const max_time = 20;
-      const time_left = (max_time - elapseTime).toFixed(2);
+      const max_time = 999;
+      const time_left = (max_time - elapseTime).toFixed(1);
       if (time_left <= 0) {
         successText.text = "你失败了";
         successText.visible = true;

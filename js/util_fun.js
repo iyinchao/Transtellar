@@ -11,7 +11,6 @@ function dommyGetFont(cb) {
   var xmlhttp=new XMLHttpRequest();
   xmlhttp.onreadystatechange = () => {
     if (xmlhttp.readyState==4) {
-      console.log("done font");
       cb(null);
     }
   }
