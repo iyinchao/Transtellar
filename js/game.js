@@ -3,6 +3,7 @@ window.onload = function() {
     var height = window.innerHeight;
     var game = new Phaser.Game(width, height, Phaser.AUTO, '', { preload: preload, create: create ,update: update, render: render});
 
+    game.bGameOver = false;
     var missText;
     var score = 0;
     var scoreText;
@@ -10,6 +11,7 @@ window.onload = function() {
     let plant_2;
     var missSound;
     var hitSound;
+    var successText;
     hammerInit();
 
     var bTimeGap = false;
@@ -38,11 +40,10 @@ window.onload = function() {
 
     function preload () {
         //game.load.image('logo', 'image/phaser.png');
-				game.load.spritesheet('button', 'image/button_sprite_sheet.png', 193, 71);
         game.load.atlasJSONHash('bot', 'assets/sprites/running_bot.png', 'assets/sprites/running_bot.json');
-        game.load.image('wizball', 'assets/sprites/wizball.png');
-        game.load.image('shinyball', 'assets/sprites/shinyball.png');
+        game.load.image('ball1', 'assets/sprites/ball-1.png');
         game.load.image('boom', 'assets/sprites/diamond.png');
+        game.load.image('background', 'assets/img/bg.jpg');
         game.load.audio('bgm', "assets/audio/bg.mp3");
         game.load.audio('hit_sound', "assets/audio/split.mp3");
         game.load.audio('miss_sound', "assets/audio/shrink.mp3");
@@ -53,12 +54,9 @@ window.onload = function() {
         plante.width = radius * 2;
         plante.height = radius * 2;
         plante.selfRadius = radius;
+        plante.rotation_speed = _.random(0.005,0.015);
         setAnchorCenter(plante);
         return plante;
-    }
-
-    function setAnchorCenter(sprite) {
-      sprite.anchor.setTo(0.5,0.5);
     }
 
     function addNewBot(texture,speed) {
@@ -92,8 +90,10 @@ window.onload = function() {
     let gwcy;
 
     function checkGameOver() {
-      if (checkIndex > 3) {
+      if (checkIndex >= 3) {
+        successText.text = "成功传递信息";
         successText.visible = true;
+        game.bGameOver = true;
         return true;
       } else {
         return false;
@@ -101,20 +101,28 @@ window.onload = function() {
     }
 
     function create () {
-        game.stage.backgroundColor = "#4488AA";
+        game.stage.backgroundColor = "#ffffff";
+
+        var bg_sp = game.add.sprite(0,0,"background");
+        bg_sp.width = width; 
+        bg_sp.height = height; 
         gwcx = game.world.centerX;
         gwcy = game.world.centerY;
         
         hitSound = game.add.audio('hit_sound');
         missSound = game.add.audio('miss_sound');
 
+        timer = game.time.create(false);
+        timer.start();
+
+
         //load plante
         p1_rad = 100; 
         p2_rad = 40; 
-        plant_1 = makePlante("wizball",100,100,200);
-        plant_2 = makePlante("shinyball",50,300,200);
-        plant_3 = makePlante("wizball",80,500,200);
-        plant_4 = makePlante("shinyball",100,750,200);
+        plant_1 = makePlante("ball1",100,100,200);
+        plant_2 = makePlante("ball1",50,300,200);
+        plant_3 = makePlante("ball1",80,500,200);
+        plant_4 = makePlante("ball1",100,750,200);
         plant_arr.push(plant_1);
         plant_arr.push(plant_2);
         plant_arr.push(plant_3);
@@ -140,6 +148,8 @@ window.onload = function() {
 
         scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000'  });
 
+        timerText = game.add.text(500, 16, 'Timer Left: 0', { fontSize: '32px', fill: '#000'  });
+
         missText = game.add.text(gwcx - 300, gwcy - 300, 'Miss', { fontSize: '32px', fill: '#FF3300'  });
         missText.visible = false;
 
@@ -148,7 +158,6 @@ window.onload = function() {
     }
 
     let ball_radius = 10;
-
 
     var rad = 0;
     var s2_rad = 0;
@@ -173,16 +182,15 @@ window.onload = function() {
         return ;
       }
 
-
       scoreText.text = "Score: " + score;
+      setLeftTime();
 
       const worldCenterX = game.world.centerX;
       const worldCenterY = game.world.centerY;
 
-      rotation_speed = 0.01;
-      plant_1.rotation += rotation_speed;
-      plant_2.rotation += rotation_speed;
-      plant_3.rotation += rotation_speed;
+      plant_arr.forEach((one) => {
+        one.rotation += one.rotation_speed;
+      });
 
       sp_arr.forEach((one) => {
         one.children[0].visible = false;
@@ -208,6 +216,17 @@ window.onload = function() {
         sp.y = sp.source_y + sp_run_radius * Math.sin(sp.selfRad);
       }
 
+    }
+
+    function setLeftTime() {
+      const elapseTime = game.time.totalElapsedSeconds();
+      const max_time = 20;
+      const time_left = (max_time - elapseTime).toFixed(2);
+      if (time_left <= 0) {
+        successText.text = "你失败了";
+        successText.visible = true;
+      }
+      timerText.text = "Time Left: " + time_left;
     }
 
     function render() {
