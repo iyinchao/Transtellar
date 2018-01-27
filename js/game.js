@@ -1,5 +1,4 @@
 
-
 window.onload = function() {
     var width = window.innerWidth;
     var height = window.innerHeight;
@@ -189,8 +188,8 @@ window.onload = function() {
       for (let i = 0, len = plant_arr.length - 1; i < len; ++i) {
         const need_type = input_arr[i];
         const mark_name = type_map[need_type];
-        const x = plant_arr[i].x + plant_arr[i+1].x;
-        const marker = makePlante(mark_name,0.8, parseInt(x/2), 300);
+        const y = plant_arr[i].y + plant_arr[i+1].y;
+        const marker = makePlante(mark_name,0.8, 100,parseInt(y/2));
         marker.visible = false;
         marker_arr[i] = marker;
       }
@@ -214,11 +213,11 @@ window.onload = function() {
         //load plante
         p1_rad = 100; 
         p2_rad = 40; 
-        plant_1 = makePlante("ball1",0.4,100,200);
-        plant_2 = makePlante("ball2",0.2,300,200);
-        plant_3 = makePlante("ball3",0.3,500,200);
-        ball_ring = makePlante("ball-ring",0.3,500,200);
-        plant_4 = makePlante("ball4",0.25,750,200);
+        plant_1 = makePlante("ball1",0.35,gwcx,200);
+        plant_2 = makePlante("ball2",0.2,gwcx,400);
+        plant_3 = makePlante("ball3",0.3,gwcx,550);
+        ball_ring = makePlante("ball-ring",0.3,gwcx,550);
+        plant_4 = makePlante("ball4",0.25,gwcx,750);
         plant_arr.push(plant_1);
         plant_arr.push(plant_2);
         plant_arr.push(plant_3);
@@ -246,10 +245,11 @@ window.onload = function() {
         sp_arr.push(s4);
 
         scoreText = createText(16, 16, '', { fontSize: '32px', fill: '#000'  });
-        timerText = createText(500, 16, '', { fontSize: '32px', fill: '#000'  });
+        timerText = createText(150, 16, '', { fontSize: '32px', fill: '#000'  });
         missText = createText(gwcx - 300, gwcy - 300, '', { fontSize: '32px', fill: '#FF3300'  });
         missText.visible = false;
-        successText = createText(30, 30, '', { fontSize: '80px', fill: '#FF3300'  });
+        successText = createText(gwcx, gwcy, '', { fontSize: '40px', fill: '#FF3300'  });
+        setAnchorCenter(successText);
         successText.visible = false;
         dommyGetFont(() => {
           scoreText.text = "Score : 0";
@@ -257,7 +257,7 @@ window.onload = function() {
           successText.text = "Mission Complate";
         })
 
-        finish_sp = game.add.sprite(0,-500,"finish_bg");
+        finish_sp = game.add.sprite(0,-2000,"finish_bg");
         finish_sp.width = width;
         finish_sp.height = height;
     }
