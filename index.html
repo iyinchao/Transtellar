@@ -19,18 +19,29 @@
     <script type="text/x-template" id="vue-root">
         <div id="ui">
             <div class="ui-overlay" v-if="state === 'gaming'">
-            </div>
-            <div class="page" v-if="state === 'intro'">
-                <div class="logo-wrapper">
-                    <div class="planet">
+            <div class="page intro" v-if="state === 'intro'" :class="{'active':introActive}">
+                <div class="logo-wrapper" ref="logoWrapper">
+                    <div class="planet-wrapper">
+                        <div class="planet" style="background-image: url('/assets/img/title-planet.png')">
+                        </div>
                     </div>
-                    <div class="title title-1">
+                    <div class="title-1-wrapper">
+                        <div class="title title-1" style="background-image: url('/assets/img/title-1.png')">
+                        </div>
                     </div>
-                    <div class="title title-2">
+                    <div class="title-2-wrapper">
+                        <div class="title title-2" style="background-image: url('/assets/img/title-2.png')">
+                        </div>
                     </div>
-                    <div class="pc-1"></div>
-                    <div class="pc-2"></div>
-                    <div class="pc-3"></div>
+                    <div class="pc-wrapper pc-1-wrapper">
+                        <div class="pc pc-1" style="background-image: url('/assets/img/pc-1.png')"></div>
+                    </div>
+                    <div class="pc-wrapper pc-2-wrapper">
+                        <div class="pc pc-2" style="background-image: url('/assets/img/pc-2.png')"></div>
+                    </div>
+                    <div class="pc-wrapper pc-3-wrapper">
+                        <div class="pc pc-3" style="background-image: url('/assets/img/pc-3.png')"></div>
+                    </div>
                 </div>
             </div>
             <div class="page" v-if="state === 'over'"></div>

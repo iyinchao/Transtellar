@@ -27,6 +27,150 @@ body {
 	height: 100vh;
 }
 
+.logo-wrapper {
+	width: 100vw;
+	height: 100vh;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.logo-wrapper .planet-wrapper {
+	width: 100%;
+	height: 100%;
+	transform: scale(0.2);
+	opacity: 0;
+	transform-origin: 50%;
+	transition: opacity linear 300ms, transform ease-out 300ms;
+	transition-delay: 200ms;
+}
+
+.logo-wrapper .pc-wrapper {
+	width: 20%;
+	height: 20%;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%) scale(0.2);
+	opacity: 0;
+	transform-origin: 50%;
+	transition: opacity linear 300ms, transform ease-out 300ms;
+	transition-delay: 200ms;
+}
+
+.page.intro.active .pc-wrapper.pc-1-wrapper {
+	transform: translate(-137%, -170%);
+	opacity: 1;
+	transition-delay: 350ms;
+}
+
+.page.intro.active .pc-wrapper.pc-2-wrapper {
+	opacity: 1;
+	transform: translate(40%, -132%);
+	transition-delay: 400ms;
+}
+
+.page.intro.active .pc-wrapper.pc-3-wrapper {
+	opacity: 1;
+	transform: translate(-140%, 40%);
+	transition-delay: 450ms;
+}
+
+.page.intro.active .logo-wrapper .planet-wrapper {
+	transform: scale(0.8);
+	opacity: 1;
+}
+
+.logo-wrapper .title-1-wrapper {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left: 0;
+	top: 0;
+	transform: translate(-11%, -9%) scale(0.2);
+	transform-origin: 100%, 50%;
+	opacity: 0;
+	transition: opacity linear 300ms, transform ease-out 300ms;
+	transition-delay: 250ms;
+}
+
+.page.intro.active .title-1-wrapper {
+	transform: translate(-11%, -9%) scale(1.3);
+	opacity: 1;
+}
+
+.logo-wrapper .title-2-wrapper {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+	transform: translate(16%, 6%) scale(0.2);
+	opacity: 0;
+	transition: opacity linear 300ms, transform ease-out 300ms;
+	transition-delay: 300ms;
+}
+
+.page.intro.active .title-2-wrapper {
+    transform: translate(16%, 6%) scale(1.1);
+	opacity: 1;
+}
+
+@keyframes planet-rotate {
+	0% {
+		transform: rotate(-80deg);
+	}
+	100% {
+		transform: rotate(280deg);
+	}
+}
+
+@keyframes pc-float {
+	0% {
+		transform: translateY(-10%);
+	}
+	50% {
+		transform: translateY(0%);
+	}
+	100% {
+		transform: translateY(-10%);
+	}
+}
+
+.logo-wrapper .planet {
+	width: 100%;
+	height: 100%;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	animation: planet-rotate 25s infinite linear;
+}
+
+.logo-wrapper .title-1 {
+	width: 100%;
+	height: 100%;
+	background-size: 50%;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.logo-wrapper .title-2 {
+	width: 100%;
+	height: 100%;
+	background-size: 50%;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.logo-wrapper .pc {
+	width: 100%;
+	height: 100%;
+	background-size: 100%;
+	background-repeat: no-repeat;
+	background-position: center;
+	animation: pc-float 2s infinite ease-in-out;
+}
 
 @font-face {
 	font-family: 'hand';
