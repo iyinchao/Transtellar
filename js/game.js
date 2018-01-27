@@ -23,19 +23,17 @@ window.onload = function() {
 
     initVue()
 
-    //window.$ui.setState("gaming");
+    window.$ui.setState("gaming");
 
     var deviceRatio = window.devicePixelRatio || 1
 
     game.bGameOver = false;
-    var missText;
-    var score = 0;
-    var scoreText;
-    let plant_1;
-    let plant_2;
     var missSound;
     var hitSound;
-    var successText;
+
+    var sp_arr = [];
+    var plant_arr = [];
+    var checkIndex = 0;
 
     var bTimeGap = false;
     var marker_arr = [];
@@ -55,7 +53,6 @@ window.onload = function() {
     }
 
 
-    //对hammerjs的手势增加额外检查
     let iSingleTransIndex = 0;
 
     function hammerInit() {
@@ -70,7 +67,6 @@ window.onload = function() {
           if (!input_arr[checkIndex][iSingleTransIndex]) {
             hitSound.play();
             const iNowDist = parseInt(getNowDistance());
-            score += iNowDist;
             checkIndex += 1;
             iSingleTransIndex = 0;
             iTimeTotal += 40;
@@ -98,8 +94,6 @@ window.onload = function() {
     }
 
     function preload () {
-        //game.load.image('logo', 'image/phaser.png');
-        game.load.atlasJSONHash('bot', 'assets/sprites/running_bot.png', 'assets/sprites/running_bot.json');
         for (let i = 1 ; i <= 6; ++i) {
           game.load.image(`ball${i}`, `assets/ball-${i}.png`);
         }
@@ -111,9 +105,6 @@ window.onload = function() {
           game.load.image(`ship${i}`, `assets/pc-${i}.png`);
         }
         game.load.image('boom', 'assets/msg.png');
-        game.load.image('star', 'assets/sprites/a.png');
-        game.load.image('background', 'assets/img/bg.jpg');
-        game.load.image('finish_bg', 'assets/sprites/f_bg.png');
         game.load.audio('bgm', "assets/audio/bg.mp3");
         game.load.audio('hit_sound', "assets/audio/split.mp3");
         game.load.audio('miss_sound', "assets/audio/shrink.mp3");
@@ -154,37 +145,6 @@ window.onload = function() {
       sp.source_radius = plant.selfRadius;
     }
 
-    function makeFinishStar(texture,radius,s_x,s_y) {
-        var plante = game.add.sprite(s_x,s_y,texture);
-        plante.width = radius * 2;
-        plante.height = radius * 2;
-        plante.selfRadius = radius;
-        plante.rotation_speed = _.random(0.005,0.015);
-        setAnchorCenter(plante);
-        return plante;
-    }
-
-    let gwcx;
-    let gwcy;
-
-    function checkGameOver() {
-      if (checkIndex >= plant_arr.length) {
-        successText.text = "Mission Complate";
-        successText.visible = true;
-        game.bGameOver = true;
-        return true;
-      } else {
-        return false;
-      }
-    }
-
-    function createText(x,y,str,opt) {
-      opt.font = 'normal normal bold medium hand';
-      opt.fontWeight = 100; 
-      var textObj = game.add.text(x, y, str ,opt);
-      return textObj;
-    }
-
     function addMarker() {
       for (let i = 0, len = plant_arr.length - 1; i < len; ++i) {
         const need_type_arr = input_arr[i];
@@ -204,7 +164,7 @@ window.onload = function() {
       const arr = [];
 
       for (let i = 0; i < iCnt ; ++i) {
-        arr.push(vaild_input_type[_.random(0,8)]);
+        arr.push(vaild_input_type[_.random(0,vaild_input_type.length - 1)]);
       }
       return arr;
     }
@@ -248,9 +208,6 @@ window.onload = function() {
         game.scale.setResizeCallback(resizeCallBack, this)
         resizeCallBack.call(this, this.scale)
         game.world.setBounds(0, 0, 10000, 10000)
-
-        gwcx = game.world.centerX;
-        gwcy = game.world.centerY;
         
         hitSound = game.add.audio('hit_sound');
         missSound = game.add.audio('miss_sound');
@@ -269,45 +226,7 @@ window.onload = function() {
         console.log("checkIndex 0 type %s",JSON.stringify(input_arr[0]));
 
         hammerInit();
-
-
-        scoreText = createText(450, 16, '', { fontSize: '32px', fill: '#000'  });
-        timerText = createText(450, 16, '', { fontSize: '32px', fill: '#000'  });
-        missText = createText(gwcx - 300, gwcy - 300, '', { fontSize: '32px', fill: '#FF3300'  });
-        missText.visible = false;
-        successText = createText(gwcx, gwcy, '', { fontSize: '40px', fill: '#FF3300'  });
-        setAnchorCenter(successText);
-        successText.visible = false;
-        dommyGetFont(() => {
-          scoreText.text = "Score : 0";
-          missText.text = "Miss";
-          successText.text = "Mission Complate";
-        })
-
-        finish_sp = game.add.sprite(0,-2000,"finish_bg");
-        finish_sp.width = width;
-        finish_sp.height = height;
     }
-
-    let ball_radius = 10;
-
-    let finish_sp;
-
-    var rad = 0;
-    var s2_rad = 0;
-    var cooldown = false;
-
-    var sp_arr = [];
-    var plant_arr = [];
-    var checkIndex = 0;
-
-    const finishAnimation = () => {
-      if (game.bGameOver) {
-        if (finish_sp.y <= 0 ) {
-          finish_sp.y += 5;
-        }  
-      }
-    };
 
     const getNowDistance = () => {
       const cp_from = sp_arr[checkIndex];
@@ -321,23 +240,9 @@ window.onload = function() {
 
     function update() {
 
-      if (checkGameOver()) {
-        return ;
-      }
-
-      if (scoreText) {
-        scoreText.text = "Score: " + score;
-        setLeftTime();
-      }
-
-      const worldCenterX = game.world.centerX;
-      const worldCenterY = game.world.centerY;
-
       plant_arr.forEach((one) => {
         one.rotation += one.rotation_speed;
       });
-
-      
 
       sp_arr.forEach((one,index) => {
         if (index === checkIndex || index === checkIndex + 1) {
@@ -416,22 +321,7 @@ window.onload = function() {
       game.camera.y = smCamY.getValue()
     }
 
-    function setLeftTime() {
-      const elapseTime = game.time.totalElapsedSeconds();
-      const time_left = (iTimeTotal - elapseTime).toFixed(1);
-      if (time_left <= 0) {
-        successText.text = "你失败了";
-        successText.visible = true;
-      }
-      if (!timerText) {
-        return;
-      }
-      timerText.text = "Time Left: " + time_left;
-    }
-
     function render() {
-      finishAnimation();
-
       //game.debug.cameraInfo(game.camera, 32, 64)
     }
 
