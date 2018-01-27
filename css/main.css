@@ -4,7 +4,9 @@
 }
 
 body {
-    overflow : hidden;
+		overflow : hidden;
+		background: url('../assets/img/bg.jpg');
+		background-size: 100%;
 }
 
 

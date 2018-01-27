@@ -2,7 +2,10 @@
 window.onload = function() {
     var width = window.innerWidth;
     var height = window.innerHeight;
-    var game = new Phaser.Game(width, height, Phaser.AUTO, '', { preload: preload, create: create ,update: update, render: render});
+    var canvasWrapper = document.querySelector('#canvas-wrapper')
+    var game = new Phaser.Game(width, height, Phaser.AUTO, canvasWrapper, { preload: preload, create: create ,update: update, render: render}, true, true);
+
+    
 
     game.bGameOver = false;
     var missText;
@@ -196,11 +199,20 @@ window.onload = function() {
     }
 
     function create () {
-        game.stage.backgroundColor = "#ffffff";
+        game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
+        game.scale.setResizeCallback(_.throttle(function onResize(scale) {
+          const deviceRatio = window.devicePixelRatio || 1
+          scale.setGameSize(
+          game.parent.clientWidth * deviceRatio,
+          game.parent.clientHeight * deviceRatio)
+          game.input.scale = new Phaser.Point(deviceRatio, deviceRatio)
+        }, 500), this)
 
-        var bg_sp = game.add.sprite(0,0,"background");
-        bg_sp.width = width; 
-        bg_sp.height = height; 
+        // game.stage.backgroundColor = "#ffffff";
+
+        // var bg_sp = game.add.sprite(0,0,"background");
+        // bg_sp.width = width; 
+        // bg_sp.height = height; 
         gwcx = game.world.centerX;
         gwcy = game.world.centerY;
         
