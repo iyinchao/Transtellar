@@ -45,8 +45,8 @@ window.onload = function() {
       "panup"    : "mark1",
       "pandown"  : "mark2",
       "panleft"  : "mark3",
-      "panright" : "mark4",
-      "tap"      : "mark5",
+      "panright" : "mark1",
+      "tap"      : "mark1",
     }
 
 
@@ -83,31 +83,38 @@ window.onload = function() {
       return bOk;
     }
 
+    let iSingleTransIndex = 0;
+
     function hammerInit() {
       var hammertime = new Hammer(window.document, {});
 
       const evCB = (ev) => {
         const evType = ev.type;
-        let now_need_type = input_arr[checkIndex];
+        let now_need_type = input_arr[checkIndex][iSingleTransIndex];
 
         function moveInfomation() {
           hammertime.off(now_need_type,evCB);
-          hitSound.play();
-          const iNowDist = parseInt(getNowDistance());
-          score += iNowDist;
-          checkIndex += 1;
-          now_need_type = input_arr[checkIndex];
-          hammertime.on(now_need_type,evCB);
-          checkGameOver();
-          console.log("checkIndex move %d type %s",checkIndex,input_arr[checkIndex]);
 
-          iTimeTotal += 40;
+          //找不到下一个需要的序列了的话 则可以move到下一个新球
+          if (!input_arr[checkIndex][iSingleTransIndex]) {
+            hitSound.play();
+            const iNowDist = parseInt(getNowDistance());
+            score += iNowDist;
+            checkIndex += 1;
+            iSingleTransIndex = 0;
+            iTimeTotal += 40;
+          }
+          now_need_type = input_arr[checkIndex][iSingleTransIndex];
+          console.log("now checkIndex %d type %s listen type %s",checkIndex,JSON.stringify(input_arr[checkIndex]),now_need_type);
+          hammertime.on(now_need_type,evCB);
         }
 
-        const throtMoveInfomation = _.throttle(moveInfomation,400);
+        const throtMoveInfomation = _.throttle(moveInfomation,150);
 
         if (bTimeGap) {
           if (evType === now_need_type && checkPanPype(ev)) {
+            console.log("hit %s",now_need_type);
+            iSingleTransIndex++;
             throtMoveInfomation();
           } else {
             iTimeTotal -= 20;
@@ -115,7 +122,7 @@ window.onload = function() {
           }
         }
       }
-      hammertime.on(input_arr[0],evCB);
+      hammertime.on(input_arr[0][0],evCB);
     }
 
     function preload () {
@@ -208,13 +215,26 @@ window.onload = function() {
 
     function addMarker() {
       for (let i = 0, len = plant_arr.length - 1; i < len; ++i) {
-        const need_type = input_arr[i];
-        const mark_name = type_map[need_type];
-        const y = plant_arr[i].y + plant_arr[i+1].y;
-        const marker = makePlante(mark_name,0.8, 100,parseInt(y/2));
-        marker.visible = false;
-        marker_arr[i] = marker;
+        const need_type_arr = input_arr[i];
+        let y = 100;
+        const plant_marker_arr = need_type_arr.map((one) => {
+          const mark_name = type_map[one];
+          y += 50;
+          const marker = makePlante(mark_name,0.8,100,y);
+          marker.visible = false;
+          return marker;
+        }) 
+        marker_arr[i] = plant_marker_arr;
       }
+    }
+
+    function newInputType(iCnt = 1) {
+      const arr = [];
+
+      for (let i = 0; i < iCnt ; ++i) {
+        arr.push(vaild_input_type[_.random(0,4)]);
+      }
+      return arr;
     }
 
     const appendPlante = () => {
@@ -227,7 +247,7 @@ window.onload = function() {
         new_x = last_plant.x + _.random(50,100) * (_.shuffle([-1,1])[0]);
         new_y = last_plant.y + random_radius * 400 + 100; // 两个飞船的大小;
 
-        input_arr.push(vaild_input_type[_.random(0,4)]);
+        input_arr.push(newInputType(2));
       }
       var plant = makePlante(random_ball,random_radius,new_x,new_y);
       if (_.random(0,1,true) < 0.3) {
@@ -269,7 +289,7 @@ window.onload = function() {
         //显示操作的图标
         addMarker();
 
-        console.log("checkIndex 0 type %s",input_arr[0]);
+        console.log("checkIndex 0 type %s",JSON.stringify(input_arr[0]));
 
         hammerInit();
 
