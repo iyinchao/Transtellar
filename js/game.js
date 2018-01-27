@@ -5,8 +5,6 @@ window.onload = function() {
     var canvasWrapper = document.querySelector('#canvas-wrapper')
     var game = new Phaser.Game(width, height, Phaser.AUTO, canvasWrapper, { preload: preload, create: create ,update: update, render: render}, true, true);
 
-    
-
     game.bGameOver = false;
     var missText;
     var score = 0;
@@ -134,8 +132,6 @@ window.onload = function() {
       var s = game.add.sprite(0,0, texture);
       setAnchorCenter(s);
       s.scale.setTo(0.5, 0.5);
-      //s.animations.add('run');
-      //s.animations.play('run', 10, true);
       s.selfRad = 0;
       s.mSpeed = speed;
       var boom = addBoom("boom");
@@ -181,7 +177,6 @@ window.onload = function() {
       }
     }
 
-
     function createText(x,y,str,opt) {
       opt.font = 'normal normal bold medium hand';
       opt.fontWeight = 100; 
@@ -203,9 +198,13 @@ window.onload = function() {
     const appendPlante = () => {
       const random_ball = `ball${_.random(1,6)}`;
       const random_radius = _.random(0.2,0.35);
-      const last_plant = plant_arr[plant_arr.length - 1];
-      const new_x = last_plant.x + _.random(50,100) * (_.shuffle([-1,1])[0]);
-      const new_y = last_plant.y + random_radius * 400 + 100; // 两个飞船的大小;
+      let new_x = 300;
+      let new_y = 200;
+      if (plant_arr.length > 0) {
+        const last_plant = plant_arr[plant_arr.length - 1];
+        new_x = last_plant.x + _.random(50,100) * (_.shuffle([-1,1])[0]);
+        new_y = last_plant.y + random_radius * 400 + 100; // 两个飞船的大小;
+      }
       var plant = makePlante(random_ball,random_radius,new_x,new_y);
       if (_.random(0,1,true) < 0.3) {
         makePlante("ball-ring",random_radius,new_x,new_y);
@@ -239,10 +238,6 @@ window.onload = function() {
         timer.start();
 
         //load plante
-        p1_rad = 100; 
-        p2_rad = 40; 
-        plant_1 = makePlante("ball1",0.35,500,200);
-        plant_arr.push(plant_1);
         for (let i = 0; i < 10; ++i) {
           appendPlante();
         }
