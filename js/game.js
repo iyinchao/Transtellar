@@ -285,7 +285,8 @@ window.onload = function() {
 
       for (let i = 0, len = sp_arr.length; i < len; ++i) {
         var sp = sp_arr[i];
-        sp.selfRad += sp.mSpeed;
+        sp.selfRad -= sp.mSpeed;
+        sp.rotation = 360 + sp.selfRad;
         if (sp.mSpeed < sp.mFullSpeed) {
           sp.mSpeed += 0.001;
         }
