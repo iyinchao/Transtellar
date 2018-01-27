@@ -9,6 +9,14 @@ body {
 		background-size: 100%;
 }
 
+#hitText {
+    font-size : 30px;
+    position: absolute;
+    top : 30px;
+    left : 30px;
+    float : left;
+}
+
 
 @font-face {
 	font-family: 'hand';
