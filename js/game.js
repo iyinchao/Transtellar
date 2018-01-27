@@ -1,3 +1,5 @@
+
+
 window.onload = function() {
     var width = window.innerWidth;
     var height = window.innerHeight;
@@ -14,9 +16,18 @@ window.onload = function() {
     var successText;
 
     var bTimeGap = false;
+    var marker_arr = [];
 
-    var input_arr = ["panup","pandown","panright","panup","pandown"];
+    //支持五种输入 tap panup pandown panright panleft
+    var input_arr = ["panup","pandown","panright","tap","pandown"];
 
+    var type_map = {
+      "panup"    : "mark1",
+      "pandown"  : "mark2",
+      "panleft"  : "mark3",
+      "panright" : "mark4",
+      "tap"      : "mark5",
+    }
 
     hammerInit();
 
@@ -174,6 +185,17 @@ window.onload = function() {
       return textObj;
     }
 
+    function addMarker() {
+      for (let i = 0, len = plant_arr.length - 1; i < len; ++i) {
+        const need_type = input_arr[i];
+        const mark_name = type_map[need_type];
+        const x = plant_arr[i].x + plant_arr[i+1].x;
+        const marker = makePlante(mark_name,0.8, parseInt(x/2), 300);
+        marker.visible = false;
+        marker_arr[i] = marker;
+      }
+    }
+
     function create () {
         game.stage.backgroundColor = "#ffffff";
 
@@ -193,7 +215,6 @@ window.onload = function() {
         p1_rad = 100; 
         p2_rad = 40; 
         plant_1 = makePlante("ball1",0.4,100,200);
-        mark_1 = makePlante("mark1",0.1)
         plant_2 = makePlante("ball2",0.2,300,200);
         plant_3 = makePlante("ball3",0.3,500,200);
         ball_ring = makePlante("ball-ring",0.3,500,200);
@@ -202,6 +223,9 @@ window.onload = function() {
         plant_arr.push(plant_2);
         plant_arr.push(plant_3);
         plant_arr.push(plant_4);
+
+        //显示操作的图标
+        addMarker();
 
         //speed 角速度
         s1 = addNewBot("ship",0.05);
@@ -290,12 +314,17 @@ window.onload = function() {
         one.children[0].visible = false;
       });
 
+      marker_arr.forEach((one) => {
+        one.visible = false;
+      });
+
       let now_dist = getNowDistance();
       const cp_from = sp_arr[checkIndex];
       const cp_to = sp_arr[checkIndex + 1];
 
       if (now_dist < 200) {
         bTimeGap = true;
+        marker_arr[checkIndex].visible = true;
         cp_from.children[0].visible = true;
         cp_to.children[0].visible = true;
       } else {
