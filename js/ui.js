@@ -5,6 +5,11 @@ function initVue() {
             return {
                 state: 'intro'
             }
+        },
+        methods : {
+          setState : function(stateName) {
+            this.state = stateName;
+          },
         }
     })
     

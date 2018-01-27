@@ -18,7 +18,8 @@
     <div id="ui"></div>
     <script type="text/x-template" id="vue-root">
         <div id="ui">
-            <div class="ui-overlay"></div>
+            <div class="ui-overlay" v-if="state === 'gaming'">
+            </div>
             <div class="page" v-if="state === 'intro'">
                 <div class="logo-wrapper">
                     <div class="planet">

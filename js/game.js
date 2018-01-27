@@ -23,6 +23,8 @@ window.onload = function() {
 
     initVue()
 
+    //window.$ui.setState("gaming");
+
     var deviceRatio = window.devicePixelRatio || 1
 
     game.bGameOver = false;
@@ -108,7 +110,7 @@ window.onload = function() {
         for (let i = 1 ; i <= 3; ++i) {
           game.load.image(`ship${i}`, `assets/pc-${i}.png`);
         }
-        game.load.image('boom', 'assets/sprites/diamond.png');
+        game.load.image('boom', 'assets/msg.png');
         game.load.image('star', 'assets/sprites/a.png');
         game.load.image('background', 'assets/img/bg.jpg');
         game.load.image('finish_bg', 'assets/sprites/f_bg.png');
@@ -135,14 +137,14 @@ window.onload = function() {
       s.mSpeed = speed;
       var boom = addBoom("boom");
       boom.visible = false;
-      boom.scale.setTo(3,3);
+      boom.scale.setTo(0.8,0.8);
       s.addChild(boom);
       return s;
     }
 
     function addBoom(texture) {
       var s = game.add.sprite(0,0, texture);
-      setAnchorCenter(s);
+      s.anchor.setTo(0.3,1.0)
       return s;
     }
 
