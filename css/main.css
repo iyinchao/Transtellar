@@ -9,6 +9,13 @@ body {
 		background-size: 100%;
 }
 
+#canvas-wrapper {
+	max-width: 100vw;
+	max-height: 100vh;
+	width: 100vw;
+	height: 100vh;
+}
+
 
 @font-face {
 	font-family: 'hand';
