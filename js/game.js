@@ -200,7 +200,7 @@ window.onload = function() {
       const arr = [];
 
       for (let i = 0; i < iCnt ; ++i) {
-        arr.push(vaild_input_type[_.random(0,4)]);
+        arr.push(vaild_input_type[_.random(0,8)]);
       }
       return arr;
     }
