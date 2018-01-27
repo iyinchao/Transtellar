@@ -179,10 +179,16 @@ window.onload = function() {
         new_x = last_plant.x + _.random(50,100) * (_.shuffle([-1,1])[0]);
         new_y = last_plant.y + random_radius * 400 + 100; // 两个飞船的大小;
 
-        input_arr.push(newInputType(Math.ceil(plant_arr.length / 6)));
+        const default_start_input = [["tap"],["pinU"],["pinD"],["pinL"],["pinR"]];
+        const input_arr_index = input_arr.length;
+        if (default_start_input[input_arr_index]) {
+          input_arr.push(default_start_input[input_arr_index]);
+        } else {
+          input_arr.push(newInputType(Math.ceil(plant_arr.length / 8)));
+        }
       }
       var plant = makePlante(random_ball,random_radius,new_x,new_y);
-      if (_.random(0,1,true) < 0.3) {
+      if (_.random(0,1,true) < 0.2) {
         var ring_sp = makePlante("ball-ring",random_radius,new_x,new_y);
         ring_sp.rotation = _.random(0,180);
       }
