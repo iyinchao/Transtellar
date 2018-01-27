@@ -108,7 +108,9 @@ window.onload = function() {
           game.load.image(`mark${i}`, `assets/mark_${i}.png`);
         }
         game.load.image('ball-ring', 'assets/ball-ring-1.png');
-        game.load.image('ship', 'assets/pc-1.png');
+        for (let i = 1 ; i <= 3; ++i) {
+          game.load.image(`ship${i}`, `assets/pc-${i}.png`);
+        }
         game.load.image('boom', 'assets/sprites/diamond.png');
         game.load.image('star', 'assets/sprites/a.png');
         game.load.image('background', 'assets/img/bg.jpg');
@@ -198,6 +200,25 @@ window.onload = function() {
       }
     }
 
+    const appendPlante = () => {
+      const random_ball = `ball${_.random(1,6)}`;
+      const random_radius = _.random(0.2,0.35);
+      const last_plant = plant_arr[plant_arr.length - 1];
+      const new_x = last_plant.x + _.random(50,100) * (_.shuffle([-1,1])[0]);
+      const new_y = last_plant.y + random_radius * 400 + 100; // 两个飞船的大小;
+      var plant = makePlante(random_ball,random_radius,new_x,new_y);
+      if (_.random(0,1,true) < 0.3) {
+        makePlante("ball-ring",random_radius,new_x,new_y);
+      }
+      plant_arr.push(plant);
+
+      const random_ship = `ship${_.random(1,3)}`;
+      const random_ship_speed = _.random(0.03,0.07);
+      const sp = addNewBot(random_ship,random_ship_speed);
+      attachRunner(sp,plant)
+      sp_arr.push(sp);
+    };
+
     function create () {
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
         game.scale.setResizeCallback(_.throttle(function onResize(scale) {
@@ -208,11 +229,6 @@ window.onload = function() {
           game.input.scale = new Phaser.Point(deviceRatio, deviceRatio)
         }, 500), this)
 
-        // game.stage.backgroundColor = "#ffffff";
-
-        // var bg_sp = game.add.sprite(0,0,"background");
-        // bg_sp.width = width; 
-        // bg_sp.height = height; 
         gwcx = game.world.centerX;
         gwcy = game.world.centerY;
         
@@ -225,39 +241,18 @@ window.onload = function() {
         //load plante
         p1_rad = 100; 
         p2_rad = 40; 
-        plant_1 = makePlante("ball1",0.35,gwcx,200);
-        plant_2 = makePlante("ball2",0.2,gwcx,400);
-        plant_3 = makePlante("ball3",0.3,gwcx,550);
-        ball_ring = makePlante("ball-ring",0.3,gwcx,550);
-        plant_4 = makePlante("ball4",0.25,gwcx,750);
+        plant_1 = makePlante("ball1",0.35,500,200);
         plant_arr.push(plant_1);
-        plant_arr.push(plant_2);
-        plant_arr.push(plant_3);
-        plant_arr.push(plant_4);
+        for (let i = 0; i < 10; ++i) {
+          appendPlante();
+        }
 
         //显示操作的图标
         addMarker();
 
-        //speed 角速度
-        s1 = addNewBot("ship",0.05);
-        attachRunner(s1,plant_1);
-
-        s2 = addNewBot("ship",0.03);
-        attachRunner(s2,plant_2);
-
-        s3 = addNewBot("ship",0.07);
-        attachRunner(s3,plant_3);
-
-        s4 = addNewBot("ship",0.06);
-        attachRunner(s4,plant_4);
-
-        sp_arr.push(s1);
-        sp_arr.push(s2);
-        sp_arr.push(s3);
-        sp_arr.push(s4);
 
         scoreText = createText(16, 16, '', { fontSize: '32px', fill: '#000'  });
-        timerText = createText(150, 16, '', { fontSize: '32px', fill: '#000'  });
+        timerText = createText(450, 16, '', { fontSize: '32px', fill: '#000'  });
         missText = createText(gwcx - 300, gwcy - 300, '', { fontSize: '32px', fill: '#FF3300'  });
         missText.visible = false;
         successText = createText(gwcx, gwcy, '', { fontSize: '40px', fill: '#FF3300'  });
