@@ -18,6 +18,8 @@ window.onload = function() {
     var bTimeGap = false;
     var marker_arr = [];
 
+    let iTimeTotal = 200;
+
     //支持五种输入 tap panup pandown panright panleft
     var input_arr = ["panup","pandown","panright","tap","pandown"];
 
@@ -81,6 +83,8 @@ window.onload = function() {
           hammertime.on(now_need_type,evCB);
           checkGameOver();
           console.log("checkIndex move %d",checkIndex);
+
+          iTimeTotal += 40;
         }
 
         const throtMoveInfomation = _.throttle(moveInfomation,400);
@@ -89,6 +93,8 @@ window.onload = function() {
           if (evType === now_need_type && checkPanPype(ev)) {
             throtMoveInfomation();
           } else {
+
+            iTimeTotal -= 20;
             missSound.play();
           }
         }
@@ -167,7 +173,7 @@ window.onload = function() {
     let gwcy;
 
     function checkGameOver() {
-      if (checkIndex >= 3) {
+      if (checkIndex >= plant_arr.length) {
         successText.text = "Mission Complate";
         successText.visible = true;
         game.bGameOver = true;
@@ -212,7 +218,7 @@ window.onload = function() {
       plant_arr.push(plant);
 
       const random_ship = `ship${_.random(1,3)}`;
-      const random_ship_speed = _.random(0.03,0.07);
+      const random_ship_speed = _.random(0.03,0.06);
       const sp = addNewBot(random_ship,random_ship_speed);
       attachRunner(sp,plant)
       sp_arr.push(sp);
@@ -290,7 +296,7 @@ window.onload = function() {
       if (!cp_to) {
         return 999;
       }
-      let now_dist = getDistance(cp_from,cp_to);
+      let now_dist = getXieLvJiaoduCha(cp_from,cp_to);
       return now_dist;
     };
 
@@ -329,7 +335,7 @@ window.onload = function() {
       const cp_from = sp_arr[checkIndex];
       const cp_to = sp_arr[checkIndex + 1];
 
-      if (now_dist < 200) {
+      if (now_dist < 999) {
         bTimeGap = true;
         marker_arr[checkIndex].visible = true;
         cp_from.children[0].visible = true;
@@ -350,8 +356,7 @@ window.onload = function() {
 
     function setLeftTime() {
       const elapseTime = game.time.totalElapsedSeconds();
-      const max_time = 999;
-      const time_left = (max_time - elapseTime).toFixed(1);
+      const time_left = (iTimeTotal - elapseTime).toFixed(1);
       if (time_left <= 0) {
         successText.text = "你失败了";
         successText.visible = true;
