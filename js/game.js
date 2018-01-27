@@ -38,7 +38,7 @@ window.onload = function() {
     let iTimeTotal = 200;
 
     //支持五种输入 tap panup pandown panright panleft
-    var vaild_input_type = ["panup","pandown","panright","panleft","tap"];
+    var vaild_input_type = ["pinL","pinR","pinU","pinD","tap","pinLU","pinLD","pinRU","pinRD"];
     var input_arr = [];
 
     var type_map = {
@@ -51,50 +51,16 @@ window.onload = function() {
 
 
     //对hammerjs的手势增加额外检查
-    function checkPanPype(ev) {
-      let bOk = true;
-      console.log(ev);
-      if (ev.type === "pan") {
-        if (ev.distance > 30) {
-          bOk = false;
-        }
-      }
-      const toll_rad = 30;
-      if (ev.type === "panup") {
-        if (Math.abs(ev.angle - (-90)) > toll_rad) {
-          bOk = false;
-        }
-      }
-      if (ev.type === "pandown") {
-        if (Math.abs(ev.angle - (90)) > toll_rad) {
-          bOk = false;
-        }
-      }
-      if (ev.type === "panright") {
-        if (Math.abs(ev.angle) > toll_rad) {
-          bOk = false;
-        }
-      }
-      if (ev.type === "panleft") {
-        if (Math.abs(ev.angle) < (180 - toll_rad)) {
-          bOk = false;
-        }
-      }
-      return bOk;
-    }
-
     let iSingleTransIndex = 0;
 
     function hammerInit() {
-      var hammertime = new Hammer(window.document, {});
+      //var hammertime = new Hammer(window.document, {});
 
       const evCB = (ev) => {
         const evType = ev.type;
         let now_need_type = input_arr[checkIndex][iSingleTransIndex];
 
         function moveInfomation() {
-          hammertime.off(now_need_type,evCB);
-
           //找不到下一个需要的序列了的话 则可以move到下一个新球
           if (!input_arr[checkIndex][iSingleTransIndex]) {
             hitSound.play();
@@ -106,23 +72,24 @@ window.onload = function() {
           }
           now_need_type = input_arr[checkIndex][iSingleTransIndex];
           console.log("now checkIndex %d type %s listen type %s",checkIndex,JSON.stringify(input_arr[checkIndex]),now_need_type);
-          hammertime.on(now_need_type,evCB);
         }
 
-        const throtMoveInfomation = _.throttle(moveInfomation,150);
+        //const throtMoveInfomation = _.throttle(moveInfomation,150);
 
         if (bTimeGap) {
-          if (evType === now_need_type && checkPanPype(ev)) {
+          if (evType === now_need_type) {
             console.log("hit %s",now_need_type);
             iSingleTransIndex++;
-            throtMoveInfomation();
+            moveInfomation();
+            //throtMoveInfomation();
           } else {
             iTimeTotal -= 20;
             missSound.play();
           }
         }
       }
-      hammertime.on(input_arr[0][0],evCB);
+
+      window.touchEventCallback = evCB;
     }
 
     function preload () {
@@ -251,7 +218,8 @@ window.onload = function() {
       }
       var plant = makePlante(random_ball,random_radius,new_x,new_y);
       if (_.random(0,1,true) < 0.3) {
-        makePlante("ball-ring",random_radius,new_x,new_y);
+        var ring_sp = makePlante("ball-ring",random_radius,new_x,new_y);
+        ring_sp.rotation = _.random(0,180);
       }
       plant_arr.push(plant);
 
@@ -385,6 +353,7 @@ window.onload = function() {
         cp_from.children[0].visible = true;
         cp_to.children[0].visible = true;
       } else {
+        iSingleTransIndex = 0;
         bTimeGap = false;
       }
 
