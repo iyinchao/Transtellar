@@ -1,0 +1,12 @@
+* {
+  padding: 0; 
+  margin: 0
+}
+
+
+@font-face {
+	font-family: 'hand';
+	src: url('../assets/font/hand.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}

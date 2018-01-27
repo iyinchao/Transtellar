@@ -5,47 +5,54 @@ window.onload = function() {
 
     game.bGameOver = false;
     var missText;
-    var score = 0;
-    var scoreText;
     let plant_1;
     let plant_2;
     var missSound;
     var hitSound;
-    var successText;
+    let hitText;
+    var sp_arr = [];
     hammerInit();
 
     var bTimeGap = false;
 
     var input_arr = ["tap","panleft","panright"]
 
+    function zoomAniamtion(sp) {
+      const w = sp.width;
+      const h = sp.height;
+      game.add.tween(sp).to({ width : 1.5 * w, height: 1.5 * h }, 600, "Linear", true, 0, 0,true);
+    }
+
+    var language_map = {
+      "tap" : 0,
+      "panleft" : 1,
+      "panright" : 2,
+      "swipeup" : 3,
+      "swipedown" : 4,
+    }
+
     function hammerInit() {
       var hammertime = new Hammer(window.document, {});
-      const evDebonceCb = _.debounce((ev) => {
-        if (bTimeGap) {
-          const evType = ev.type;
-          if (evType === input_arr[checkIndex]) {
-            const iNowDist = parseInt(getNowDistance());
-            hitSound.play();
-            score += iNowDist;
-            checkIndex += 1;
-            checkGameOver();
-          } else {
-            missSound.play();
-          }
-          console.log("checkIndex move %d",checkIndex);
+      const evDebonceCb = _.throttle((ev) => {
+        let evType = ev.type;
+        let index = language_map[evType];
+        if (plant_arr[index]) {
+          zoomAniamtion(plant_arr[index]);
         }
-      },0);
+      },1250,{
+        leading : true,
+      });
       hammertime.on('tap panleft panright', evDebonceCb);
     }
 
     function preload () {
         //game.load.image('logo', 'image/phaser.png');
         game.load.atlasJSONHash('bot', 'assets/sprites/running_bot.png', 'assets/sprites/running_bot.json');
-        game.load.image('ball1', 'assets/sprites/ball-1.png');
-        game.load.image('boom', 'assets/sprites/diamond.png');
-        game.load.image('star', 'assets/sprites/a.png');
+        game.load.image('ball1', 'assets/ball-1.png');
+        game.load.image('ball2', 'assets/ball-2.png');
+        game.load.image('ball3', 'assets/ball-3.png');
+        game.load.image('ball4', 'assets/ball-4.png');
         game.load.image('background', 'assets/img/bg.jpg');
-        game.load.image('finish_bg', 'assets/sprites/f_bg.png');
         game.load.audio('bgm', "assets/audio/bg.mp3");
         game.load.audio('hit_sound', "assets/audio/split.mp3");
         game.load.audio('miss_sound', "assets/audio/shrink.mp3");
@@ -126,6 +133,9 @@ window.onload = function() {
         var bg_sp = game.add.sprite(0,0,"background");
         bg_sp.width = width; 
         bg_sp.height = height; 
+
+        music = game.add.audio('hit_sound');
+
         gwcx = game.world.centerX;
         gwcy = game.world.centerY;
         
@@ -136,49 +146,29 @@ window.onload = function() {
         timer.start();
 
         //load plante
-        p1_rad = 100; 
-        p2_rad = 40; 
-        plant_1 = makePlante("ball1",100,100,200);
-        plant_2 = makePlante("ball1",50,300,200);
-        plant_3 = makePlante("ball1",80,500,200);
-        plant_4 = makePlante("ball1",100,750,200);
+        plant_1 = makePlante("ball1",90,100,150);
+        plant_2 = makePlante("ball2",70,300,150);
+        plant_3 = makePlante("ball3",80,500,150);
+        plant_4 = makePlante("ball4",100,700,150);
         plant_arr.push(plant_1);
         plant_arr.push(plant_2);
         plant_arr.push(plant_3);
         plant_arr.push(plant_4);
 
         //speed 角速度
-        s1 = addNewBot("bot",0.05);
-        attachRunner(s1,plant_1);
+        
+        hitText = createText(40,20, '', { fontSize: '32px', fill: '#FF3300'  });
 
-        s2 = addNewBot("bot",0.03);
-        attachRunner(s2,plant_2);
-
-        s3 = addNewBot("bot",0.07);
-        attachRunner(s3,plant_3);
-
-        s4 = addNewBot("bot",0.06);
-        attachRunner(s4,plant_4);
-
-        sp_arr.push(s1);
-        sp_arr.push(s2);
-        sp_arr.push(s3);
-        sp_arr.push(s4);
-
-        scoreText = createText(16, 16, 'score: 0', { fontSize: '32px', fill: '#000'  });
-
-        timerText = createText(500, 16, 'Timer Left: 0', { fontSize: '32px', fill: '#000'  });
-
-        missText = createText(gwcx - 300, gwcy - 300, 'Miss', { fontSize: '32px', fill: '#FF3300'  });
-        missText.visible = false;
-
-        successText = createText(30, 30, 'Mission Complate', { fontSize: '80px', fill: '#FF3300'  });
-        successText.visible = false;
+        timerText = createText(40,20, '', { fontSize: '32px', fill: '#FF3300'  });
 
         finish_sp = game.add.sprite(0,-500,"finish_sp");
         finish_sp.width = width;
         finish_sp.height = height;
+        dommyGetFont(() => {
+          hitText.text = "Can Your Know Our Meaning ?";
+        })
     }
+
 
     let ball_radius = 10;
 
@@ -188,7 +178,6 @@ window.onload = function() {
     var s2_rad = 0;
     var cooldown = false;
 
-    var sp_arr = [];
     var plant_arr = [];
     var checkIndex = 0;
 
@@ -216,11 +205,8 @@ window.onload = function() {
         return ;
       }
 
-      scoreText.text = "Score: " + score;
-      setLeftTime();
+      //setLeftTime();
 
-      const worldCenterX = game.world.centerX;
-      const worldCenterY = game.world.centerY;
 
       plant_arr.forEach((one) => {
         one.rotation += one.rotation_speed;
@@ -255,12 +241,12 @@ window.onload = function() {
     function setLeftTime() {
       const elapseTime = game.time.totalElapsedSeconds();
       const max_time = 20;
-      const time_left = (max_time - elapseTime).toFixed(2);
+      const time_left = (max_time - elapseTime).toFixed(1);
       if (time_left <= 0) {
         successText.text = "你失败了";
         successText.visible = true;
       }
-      timerText.text = "Time Left: " + time_left;
+      hitText.text = "Time Left: " + time_left;
     }
 
     function render() {
