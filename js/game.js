@@ -310,7 +310,12 @@ window.onload = function() {
         one.rotation += one.rotation_speed;
       });
 
-      sp_arr.forEach((one) => {
+      sp_arr.forEach((one,index) => {
+        if (index === checkIndex || index === checkIndex + 1) {
+          one.visible = true;
+        } else {
+          one.visible = false;
+        }
         one.children[0].visible = false;
       });
 
