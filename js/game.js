@@ -203,6 +203,13 @@ window.onload = function() {
       const random_ship = `ship${_.random(1,3)}`;
       const random_ship_speed = _.random(0.03,0.06);
       const sp = addNewBot(random_ship,random_ship_speed);
+
+      //检查和上一个飞机的速度插值，如果太小，改变初始的旋转角。
+      const last_sp = sp_arr[sp_arr.length - 1];
+      if (last_sp && Math.abs(sp.mSpeed - last_sp.mSpeed) < 0.01) {
+        sp.selfRad = 180;
+      }
+
       attachRunner(sp,plant)
       sp_arr.push(sp);
     };
