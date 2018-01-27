@@ -1,9 +1,26 @@
+const smCamX = new Smoother({
+  method: 'exponential',
+  params: { alpha: 0.05 }
+})
+
+const smCamY = new Smoother({
+  method: 'exponential',
+  params: { alpha: 0.05 }
+})
+
+const smCamScale = new Smoother({
+  method: 'exponential',
+  params: { alpha: 0.05 }
+})
+
 
 window.onload = function() {
     var width = window.innerWidth;
     var height = window.innerHeight;
     var canvasWrapper = document.querySelector('#canvas-wrapper')
     var game = new Phaser.Game(width, height, Phaser.AUTO, canvasWrapper, { preload: preload, create: create ,update: update, render: render}, true, true);
+    window.$game = game;
+    var deviceRatio = window.devicePixelRatio || 1
 
     game.bGameOver = false;
     var missText;
@@ -204,7 +221,7 @@ window.onload = function() {
     const appendPlante = () => {
       const random_ball = `ball${_.random(1,6)}`;
       const random_radius = _.random(0.2,0.35);
-      let new_x = 300;
+      let new_x = 5000;
       let new_y = 200;
       if (plant_arr.length > 0) {
         const last_plant = plant_arr[plant_arr.length - 1];
@@ -227,12 +244,12 @@ window.onload = function() {
     function create () {
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
         game.scale.setResizeCallback(_.throttle(function onResize(scale) {
-          const deviceRatio = window.devicePixelRatio || 1
           scale.setGameSize(
           game.parent.clientWidth * deviceRatio,
           game.parent.clientHeight * deviceRatio)
           game.input.scale = new Phaser.Point(deviceRatio, deviceRatio)
         }, 500), this)
+        game.world.setBounds(0, 0, 10000, 10000)
 
         gwcx = game.world.centerX;
         gwcy = game.world.centerY;
@@ -318,6 +335,8 @@ window.onload = function() {
         one.rotation += one.rotation_speed;
       });
 
+      
+
       sp_arr.forEach((one,index) => {
         if (index === checkIndex || index === checkIndex + 1) {
           one.visible = true;
@@ -352,6 +371,52 @@ window.onload = function() {
         sp.y = sp.source_y + sp_run_radius * Math.sin(sp.selfRad);
       }
 
+      // Place camera to optimal position
+      const pPrev = plant_arr[checkIndex]
+      const pNext = plant_arr[checkIndex + 1]
+      
+      const boundLeft = Math.min(pPrev.left, pNext.left)
+      const boundRight = Math.max(pPrev.right, pNext.right)
+      const boundTop = Math.min(pPrev.top, pNext.top)
+      const boundBottom = Math.max(pPrev.bottom, pNext.bottom)
+
+      // Get bound
+      const boundCenterX = (boundRight + boundLeft) / 2
+      const boundCenterY = (boundBottom + boundTop) / 2
+      const boundW = boundRight - boundLeft
+      const boundH = boundBottom - boundTop
+
+      const boundRatio = boundW / boundH
+
+      // Get screen w/h ratio, which quals to game 
+      const gameW = game.scale.bounds.width * deviceRatio
+      const gameH = game.scale.bounds.height * deviceRatio
+      const gameRatio = gameW / gameH
+
+      let camScale = 1
+      if (boundRatio < gameRatio) {
+        camScale = gameH / boundH
+      } else {
+        camScale = gameW / boundW
+      }
+
+      camScale *= 0.65
+
+      const camX = boundCenterX * camScale - game.camera.width / 2
+      const camY = boundCenterY * camScale - game.camera.height / 2
+      smCamScale.setValue(camScale)
+      smCamX.setValue(camX)
+      smCamY.setValue(camY)
+
+      // let a = smCamScale.getValue()
+      // let b = smCamX.getValue()
+      // let c = smCamY.getValue()
+
+      // console.log(camScale.toFixed(3), camX.toFixed(3), camY.toFixed(3), a.toFixed(3),b.toFixed(3),c.toFixed(3))
+
+      game.camera.scale.setTo(smCamScale.getValue())
+      game.camera.x = smCamX.getValue()
+      game.camera.y = smCamY.getValue()
     }
 
     function setLeftTime() {
@@ -369,6 +434,8 @@ window.onload = function() {
 
     function render() {
       finishAnimation();
+
+      game.debug.cameraInfo(game.camera, 32, 64)
     }
 
 };
