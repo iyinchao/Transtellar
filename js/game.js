@@ -13,6 +13,8 @@ const smCamScale = new Smoother({
   params: { alpha: 0.05 }
 })
 
+const INCR_INPUT_NUM_BY_PLANT_NUM = 8;
+
 window.onload = function() {
     var width = window.innerWidth;
     var height = window.innerHeight;
@@ -40,7 +42,6 @@ window.onload = function() {
 
     let iTimeTotal = 200;
 
-    //支持五种输入 tap panup pandown panright panleft
     var vaild_input_type = ["pinL","pinR","pinU","pinD","tap","pinLU","pinLD","pinRU","pinRD"];
     var input_arr = [];
 
@@ -70,6 +71,10 @@ window.onload = function() {
             checkIndex += 1;
             iSingleTransIndex = 0;
             iTimeTotal += 40;
+          } else {
+            //还有多的需要操作 对当前的两个小飞船进行减速操作
+            sp_arr[checkIndex].mSpeed /= 3;
+            sp_arr[checkIndex + 1].mSpeed /= 3;
           }
           now_need_type = input_arr[checkIndex][iSingleTransIndex];
           console.log("now checkIndex %d type %s listen type %s",checkIndex,JSON.stringify(input_arr[checkIndex]),now_need_type);
@@ -126,6 +131,7 @@ window.onload = function() {
       s.scale.setTo(0.5, 0.5);
       s.selfRad = 0;
       s.mSpeed = speed;
+      s.mFullSpeed = speed;
       var boom = addBoom("boom");
       boom.visible = false;
       boom.scale.setTo(0.8,0.8);
@@ -184,7 +190,7 @@ window.onload = function() {
         if (default_start_input[input_arr_index]) {
           input_arr.push(default_start_input[input_arr_index]);
         } else {
-          input_arr.push(newInputType(Math.ceil(plant_arr.length / 8)));
+          input_arr.push(newInputType(Math.ceil(plant_arr.length / INCR_INPUT_NUM_BY_PLANT_NUM)));
         }
       }
       var plant = makePlante(random_ball,random_radius,new_x,new_y);
@@ -280,6 +286,9 @@ window.onload = function() {
       for (let i = 0, len = sp_arr.length; i < len; ++i) {
         var sp = sp_arr[i];
         sp.selfRad += sp.mSpeed;
+        if (sp.mSpeed < sp.mFullSpeed) {
+          sp.mSpeed += 0.001;
+        }
         var sp_run_radius = sp.source_radius * 1.2;
         sp.x = sp.source_x + sp_run_radius * Math.cos(sp.selfRad);
         sp.y = sp.source_y + sp_run_radius * Math.sin(sp.selfRad);
