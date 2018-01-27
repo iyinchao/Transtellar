@@ -9,12 +9,22 @@ body {
 		background-size: 100%;
 }
 
-#hitText {
-    font-size : 30px;
-    position: absolute;
-    top : 30px;
-    left : 30px;
-    float : left;
+.page {
+	background: url('../assets/img/bg.jpg');
+	background-size: 100%;
+	background-position-y: 200px;
+	width: 100vw;
+	height: 100vh;
+	left: 0;
+	top: 0;
+	position: absolute;
+}
+
+#canvas-wrapper {
+	max-width: 100vw;
+	max-height: 100vh;
+	width: 100vw;
+	height: 100vh;
 }
 
 

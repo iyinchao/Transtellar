@@ -13,10 +13,10 @@ const smCamScale = new Smoother({
   params: { alpha: 0.05 }
 })
 
-
 window.onload = function() {
     var width = window.innerWidth;
     var height = window.innerHeight;
+
     var canvasWrapper = document.querySelector('#canvas-wrapper')
     var game = new Phaser.Game(width, height, Phaser.AUTO, canvasWrapper, { preload: preload, create: create ,update: update, render: render}, true, true);
     window.$game = game;
@@ -233,12 +233,16 @@ window.onload = function() {
 
     function create () {
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
-        game.scale.setResizeCallback(_.throttle(function onResize(scale) {
+        const resizeCallBack = _.throttle(function onResize(scale) {
+          // FIXME: This causes repeat trigger
+          // console.log(game.parent.clientWidth, game.parent.clientHeight)
           scale.setGameSize(
           game.parent.clientWidth * deviceRatio,
           game.parent.clientHeight * deviceRatio)
           game.input.scale = new Phaser.Point(deviceRatio, deviceRatio)
-        }, 500), this)
+        }, 600)
+        game.scale.setResizeCallback(resizeCallBack, this)
+        resizeCallBack.call(this, this.scale)
         game.world.setBounds(0, 0, 10000, 10000)
 
         gwcx = game.world.centerX;
@@ -403,12 +407,6 @@ window.onload = function() {
       smCamScale.setValue(camScale)
       smCamX.setValue(camX)
       smCamY.setValue(camY)
-
-      // let a = smCamScale.getValue()
-      // let b = smCamX.getValue()
-      // let c = smCamY.getValue()
-
-      // console.log(camScale.toFixed(3), camX.toFixed(3), camY.toFixed(3), a.toFixed(3),b.toFixed(3),c.toFixed(3))
 
       game.camera.scale.setTo(smCamScale.getValue())
       game.camera.x = smCamX.getValue()
