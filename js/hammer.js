@@ -27,10 +27,10 @@ document.body.addEventListener("touchend",(ev) => {
   let jiajiao = getJiajiao(xl,0);
   document.body.removeEventListener("touchmove",touchMoveCB)
 
-  let eventName = "tap";
+  let eventName = "";
   const dist = Math.sqrt((last_x - start_x) * (last_x - start_x) + (last_y - start_y) * (last_y - start_y));
   if (dist < 30) {
-    console.log("get tap");
+    eventName = "tap";
   } else {
     let xiangxian_index = 0;
     if (last_x >= start_x && last_y <= start_y) {
@@ -82,14 +82,14 @@ document.body.addEventListener("touchend",(ev) => {
     } else if ( jiajiao >= 292.5 && jiajiao < 337.5 ) {
       eventName = "pinRD";
     }
+  }
 
-    console.log("get event %s",eventName);
+  console.log("get event %s",eventName);
 
-    if (typeof window.touchEventCallback === "function") {
-      window.touchEventCallback({
-        type :eventName,
-      });
-    }
+  if (typeof window.touchEventCallback === "function") {
+    window.touchEventCallback({
+      type :eventName,
+    });
   }
 })
 
