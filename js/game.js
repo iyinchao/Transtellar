@@ -215,7 +215,7 @@ window.onload = function() {
         new_x = last_plant.x + _.random(50,100) * (_.shuffle([-1,1])[0]);
         new_y = last_plant.y + random_radius * 400 + 100; // 两个飞船的大小;
 
-        input_arr.push(newInputType(2));
+        input_arr.push(newInputType(Math.ceil(plant_arr.length / 6)));
       }
       var plant = makePlante(random_ball,random_radius,new_x,new_y);
       if (_.random(0,1,true) < 0.3) {
