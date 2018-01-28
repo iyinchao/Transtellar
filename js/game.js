@@ -216,6 +216,9 @@ window.onload = function() {
           game.parent.clientHeight * deviceRatio)
           game.input.scale = new Phaser.Point(deviceRatio, deviceRatio)
         }, 600)
+        
+        window.$ui.showLoading(false);
+
         game.scale.setResizeCallback(resizeCallBack, this)
         resizeCallBack.call(this, this.scale)
         game.world.setBounds(0, 0, 10000, 10000)
@@ -394,8 +397,8 @@ window.onload = function() {
     }
 
     var states = {
-      idle: {preload : preload, create : () => {}},
-      gaming: {create: create , update: update, render: render}
+      idle: {create : () => {}},
+      gaming: {preload : preload, create: create , update: update, render: render}
     }
 
     game.state.add('gaming', states.gaming)

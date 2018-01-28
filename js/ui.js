@@ -7,6 +7,7 @@ function initVue() {
             return {
                 state: 'intro',
                 introActive: false,
+                loadingActive: false,
                 arrowArr : [],
                 iSingleTransIndex : 0,
                 nowTime : 0,
@@ -29,7 +30,12 @@ function initVue() {
                         this.onWindowResizeThrottle()
                     })
                 } else {
+                    clearTimeout(introLogoAni)
                     this.introActive = false
+                }
+
+                if (nState === 'gaming') {
+                    this.showLoading(true)
                 }
             },
             onWindowResizeThrottle () {
@@ -45,8 +51,8 @@ function initVue() {
             },
             onBtStartClick () {
               this.bHard = false;
-              window.$game.state.start('gaming')
               this.setState('gaming')
+              window.$game.state.start('gaming')
             },
 
             onHardStartClick () {
@@ -88,6 +94,9 @@ function initVue() {
                   this.arrowArr.push(type_map[one]);
                 }
               });
+            },
+            showLoading: function (isShow) {
+                this.loadingActive = isShow
             }
         },
         mounted () {
