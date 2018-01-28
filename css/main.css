@@ -97,6 +97,7 @@ button.bt.bt-yellow {
     top : 40px;
     width : 100%;
     display :flex;
+    height : initial !important; 
 }
 
 #ui .arrow-line .finish{
