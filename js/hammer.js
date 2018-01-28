@@ -56,7 +56,7 @@ document.body.addEventListener("touchend",(ev) => {
         jiajiao = 90;
       }
     }
-    console.log("xl %f jiaojiao %d",xl,jiajiao);
+    //console.log("xl %f jiaojiao %d",xl,jiajiao);
     // 22.5
     // 67.5
     // 112.5
@@ -84,7 +84,7 @@ document.body.addEventListener("touchend",(ev) => {
     }
   }
 
-  console.log("get event %s",eventName);
+  //console.log("get event %s",eventName);
 
   if (typeof window.touchEventCallback === "function") {
     window.touchEventCallback({
