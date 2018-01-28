@@ -321,7 +321,7 @@ window.onload = function() {
           window.$ui.setState("dead");
           game.bGameOver = true;
           resetGame();
-        },3000);
+        }, 1000);
 
         return;
       }
