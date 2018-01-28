@@ -86,15 +86,21 @@ button.bt.bt-yellow {
 
 #ui .arrow-line {
 	position: absolute;
-	left: 30%;
     top : 4%;
     width : 100%;
+    display :flex;
+}
+
+#ui .arrow-line::after,#ui .arrow-line::before {
+    flex : 1;
+    display : block;
+    content : "";
 }
 
 #ui .arrow-line .marker {
     width : 60px;
     height : 60px;
-    display : inline-block;
+    display : block;
     background-position : center;
 	background-size: contain;
 }
