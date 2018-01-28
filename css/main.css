@@ -101,9 +101,10 @@ button.bt.bt-yellow {
 #ui .result-text {
     font-family : hand;
     font-size : 40px;
-	position: absolute;
-	left: 3%;
-    top : 50%;
+    position: absolute;
+    top: 20%;
+    width: 80% !important;
+    right: 0px;
 }
 
 #ui .arrow-line {
@@ -137,8 +138,9 @@ button.bt.bt-yellow {
 
 .dead-overlay .cute-alien {
 	left: 10%;
-	top: 10%;
+	bottom: 30%;
 	position: absolute;
+	width: 50px;
 }
 
 .dead-overlay .btn-restart {

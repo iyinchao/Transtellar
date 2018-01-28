@@ -218,7 +218,9 @@ window.onload = function() {
           game.input.scale = new Phaser.Point(deviceRatio, deviceRatio)
         }, 600)
         
-        window.$ui.showLoading(false);
+        setTimeout(() => {
+          window.$ui.showLoading(false);
+        }, 200)
 
         game.scale.setResizeCallback(resizeCallBack, this)
         resizeCallBack.call(this, this.scale)
