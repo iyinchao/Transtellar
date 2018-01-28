@@ -84,6 +84,14 @@ button.bt.bt-yellow {
     width : 100%;
 }
 
+#ui .result-text {
+    font-family : hand;
+    font-size : 40px;
+	position: absolute;
+	left: 3%;
+    top : 50%;
+}
+
 #ui .arrow-line {
 	position: absolute;
     top : 40px;
@@ -119,8 +127,14 @@ button.bt.bt-yellow {
 }
 
 .dead-overlay .btn-restart {
-	left: 50%;
-	top: 70%;
+	left: 20%;
+	top: 80%;
+	position: absolute;
+}
+
+.dead-overlay .btn-gohome {
+	left: 60%;
+	top: 80%;
 	position: absolute;
 }
 

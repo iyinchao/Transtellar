@@ -11,6 +11,7 @@ function initVue() {
                 iSingleTransIndex : 0,
                 nowTime : 0,
                 bHard : false,
+                iFinishPlant : 0,
             }
         },
         watch: {
@@ -43,24 +44,33 @@ function initVue() {
                     }
                 }
             },
-            onBtStartClick () {
-              this.bHard = false;
+            initGame () {
               window.$game.state.start('gaming')
               this.setState('gaming')
+              this.iFinishPlant = 0;
+            },
+            onBtStartClick () {
+              this.bHard = false;
+              this.initGame();
             },
 
             onHardStartClick () {
               this.bHard = true;
-              window.$game.state.start('gaming')
-              this.setState('gaming')
+              this.initGame();
             },
 
             onBtRestart () {
-                window.$game.state.start("gaming");
-                this.setState('gaming')
+              this.initGame();
+            },
+
+            onBtnGoHome () {
+              this.setState('intro')
             },
             setState : function(stateName) {
               this.state = stateName;
+            },
+            setFinishPlante : function(n) {
+              this.iFinishPlant = n;
             },
             setLeftTime : function(t) {
               this.nowTime = t;

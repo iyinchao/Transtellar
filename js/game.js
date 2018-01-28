@@ -14,7 +14,7 @@ const smCamScale = new Smoother({
 })
 
 const INCR_INPUT_NUM_BY_PLANT_NUM = 8;
-const START_GAME_TOTAL_TIME = 100;
+const START_GAME_TOTAL_TIME = 3;
 
 window.onload = function() {
     var width = window.innerWidth;
@@ -69,6 +69,7 @@ window.onload = function() {
             checkIndex += 1;
             iSingleTransIndex = 0;
             window.$ui.setSingleIndex(iSingleTransIndex);
+            window.$ui.setFinishPlante(checkIndex);
             iTimeTotal += 10;
             showMarker();
           } else {
