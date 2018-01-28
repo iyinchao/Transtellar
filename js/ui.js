@@ -46,6 +46,11 @@ function initVue() {
                 window.$game.state.start('gaming')
                 this.setState('gaming')
             },
+
+            onBtRestart () {
+                window.$game.state.start('gaming')
+                this.setState('gaming')
+            },
             setState : function(stateName) {
                 this.state = stateName;
             },

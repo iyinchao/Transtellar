@@ -14,6 +14,7 @@ const smCamScale = new Smoother({
 })
 
 const INCR_INPUT_NUM_BY_PLANT_NUM = 8;
+const START_GAME_TOTAL_TIME = 100;
 
 window.onload = function() {
     var width = window.innerWidth;
@@ -33,13 +34,15 @@ window.onload = function() {
     var missSound;
     var hitSound;
 
+    let dtStartTime = 0; 
+
     var sp_arr = [];
     var plant_arr = [];
     var checkIndex = 0;
 
     var bTimeGap = false;
 
-    let iTimeTotal = 200;
+    let iTimeTotal = START_GAME_TOTAL_TIME;
 
     var vaild_input_type = ["pinL","pinR","pinU","pinD","tap","pinLU","pinLD","pinRU","pinRD"];
     var input_arr = [];
@@ -168,6 +171,7 @@ window.onload = function() {
       if (_.random(0,1,true) < 0.2) {
         var ring_sp = makePlante("ball-ring",random_radius,new_x,new_y);
         ring_sp.rotation = _.random(0,180);
+        plant.ring_sp = ring_sp;
       }
       plant_arr.push(plant);
 
@@ -191,6 +195,8 @@ window.onload = function() {
     }
 
     function create () {
+
+        dtStartTime = new Date();
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
         const resizeCallBack = _.throttle(function onResize(scale) {
           // FIXME: This causes repeat trigger
@@ -230,14 +236,57 @@ window.onload = function() {
       return now_dist;
     };
 
+    const resetGame = () => {
+      input_arr = [];
+      sp_arr.forEach((one) => {
+        one.children[0].kill();
+        one.kill();
+      });
+
+      sp_arr = [];
+
+      plant_arr.forEach((one) => {
+        if (one.ring_sp) {
+          one.ring_sp.kill();
+        }
+        one.kill();
+      });
+
+      plant_arr = [];
+      
+    };
+
+
+    let frameCount = 0;
+
+
+    const getStartedTime = () => {
+      return (new Date() - dtStartTime) / 1000;
+    };
+
     const updateUITimer = () => {
-      window.$ui.setLeftTime(iTimeTotal - game.time.totalElapsedSeconds());
+      const leftTime = iTimeTotal - getStartedTime();
+      if (leftTime <= 0) {
+        window.$ui.setLeftTime(0);
+        window.$ui.setState("dead");
+        return true;
+      }
+      frameCount++;
+      if (frameCount % 5 === 0) {
+        window.$ui.setLeftTime(leftTime);
+      }
+      return false;
     };
 
     function update() {
 
-      updateUITimer();
-      //_.throttle(updateUITimer,80);
+      let bDead = updateUITimer();
+      if (bDead) {
+        game.bGameOver = true;
+        game.paused = true;
+        resetGame();
+        return;
+      }
 
       plant_arr.forEach((one) => {
         one.rotation += one.rotation_speed;
