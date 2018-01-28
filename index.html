@@ -22,7 +22,7 @@
                     <div v-for="(one,index) in arrowArr" :class='[one, index < iSingleTransIndex ? "finish" : ""]' class="marker">
                     </div>
                 </div>
-                <div class="time-line">
+                <div class="time-line" ref="timeLine">
                     Time Left: {{nowTime.toFixed(1)}}
                 </div>
                 <div class="loading" v-if="loadingActive">Loading...</div>
