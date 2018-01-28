@@ -91,9 +91,6 @@ window.onload = function() {
         for (let i = 1 ; i <= 6; ++i) {
           game.load.image(`ball${i}`, `assets/ball-${i}.png`);
         }
-        for (let i = 1 ; i <= 3; ++i) {
-          game.load.image(`mark${i}`, `assets/mark_${i}.png`);
-        }
         game.load.image('ball-ring', 'assets/ball-ring-1.png');
         for (let i = 1 ; i <= 3; ++i) {
           game.load.image(`ship${i}`, `assets/pc-${i}.png`);
@@ -331,8 +328,8 @@ window.onload = function() {
     }
 
     var states = {
-      idle: {},
-      gaming: { preload: preload, create: create , update: update, render: render}
+      idle: {preload : preload},
+      gaming: {create: create , update: update, render: render}
     }
 
     game.state.add('gaming', states.gaming)
