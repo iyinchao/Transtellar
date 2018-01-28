@@ -18,8 +18,6 @@
     <script type="text/x-template" id="vue-root">
         <div id="ui">
             <div class="ui-overlay" v-if="state === 'gaming'">
-                <div class="ui-score">
-                </div>
                 <div class="arrow-line">
                     <div v-for="one in arrowArr" :class="one" class="marker">
                     </div>
@@ -29,8 +27,8 @@
                 </div>
             </div>
             <div class="dead-overlay" v-if="state === 'dead'">
-                <img src="assets/finger-point.png">
-                <button class="bt bt-yellow" @click="onBtRestart">Re Start</button>
+                <img class="cute-alien" src="assets/cute-alien.png">
+                <button class="bt bt-yellow btn-restart" @click="onBtRestart">Re Start</button>
             </div>
             <div class="page intro" v-if="state === 'intro'" :class="{'active':introActive}">
                 <div class="logo-wrapper" ref="logoWrapper">

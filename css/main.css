@@ -97,6 +97,29 @@ button.bt.bt-yellow {
     content : "";
 }
 
+.dead-overlay {
+	background: url('../assets/img/bg.jpg');
+	background-size: 100%;
+	background-position-y: 200px;
+	width: 100vw;
+	height: 100vh;
+	left: 0;
+	top: 0;
+	position: absolute;
+}
+
+.dead-overlay .cute-alien {
+	left: 10%;
+	top: 10%;
+	position: absolute;
+}
+
+.dead-overlay .btn-restart {
+	left: 50%;
+	top: 70%;
+	position: absolute;
+}
+
 #ui .arrow-line .marker {
     width : 60px;
     height : 60px;

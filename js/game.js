@@ -54,6 +54,10 @@ window.onload = function() {
       //var hammertime = new Hammer(window.document, {});
 
       const evCB = (ev) => {
+        if (game.bGameOver) {
+          return;
+        }
+
         const evType = ev.type;
         let now_need_type = input_arr[checkIndex][iSingleTransIndex];
 
@@ -196,6 +200,10 @@ window.onload = function() {
 
     function create () {
 
+        console.log("game created");
+
+        game.bGameOver = false;
+
         dtStartTime = new Date();
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
         const resizeCallBack = _.throttle(function onResize(scale) {
@@ -253,7 +261,13 @@ window.onload = function() {
       });
 
       plant_arr = [];
-      
+
+      bTimeGap = false;
+      checkIndex = 0;
+      iSingleTransIndex = 0;
+      iTimeTotal = START_GAME_TOTAL_TIME;
+
+      game.state.start("idle");
     };
 
 
@@ -283,7 +297,6 @@ window.onload = function() {
       let bDead = updateUITimer();
       if (bDead) {
         game.bGameOver = true;
-        game.paused = true;
         resetGame();
         return;
       }
@@ -377,7 +390,7 @@ window.onload = function() {
     }
 
     var states = {
-      idle: {preload : preload},
+      idle: {preload : preload, create : () => {}},
       gaming: {create: create , update: update, render: render}
     }
 
