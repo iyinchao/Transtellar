@@ -8,7 +8,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://cdn.bootcss.com/phaser/2.6.2/phaser.min.js"></script>
     <script src="https://cdn.bootcss.com/lodash.js/4.17.4/lodash.min.js"></script>
-    <script src="https://cdn.bootcss.com/hammer.js/2.0.8/hammer.min.js"></script>
     <script src="lib/vue.js"></script>
     <script src="js/util_fun.js"></script>
     <script src="js/smoother.js"></script>
@@ -18,7 +17,17 @@
     <div id="ui"></div>
     <script type="text/x-template" id="vue-root">
         <div id="ui">
-            <div class="ui-overlay" v-if="state === 'gaming'"></div>
+            <div class="ui-overlay" v-if="state === 'gaming'">
+                <div class="ui-score">
+                </div>
+                <div class="arrow-line">
+                    <div v-for="one in arrowArr" :class="one" class="marker">
+                    </div>
+                </div>
+                <div class="time-line">
+                    Time Left: {{nowTime.toFixed(1)}}
+                </div>
+            </div>
             <div class="page intro" v-if="state === 'intro'" :class="{'active':introActive}">
                 <div class="logo-wrapper" ref="logoWrapper">
                     <div class="planet-wrapper">

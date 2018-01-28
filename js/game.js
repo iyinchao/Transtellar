@@ -38,20 +38,11 @@ window.onload = function() {
     var checkIndex = 0;
 
     var bTimeGap = false;
-    var marker_arr = [];
 
     let iTimeTotal = 200;
 
     var vaild_input_type = ["pinL","pinR","pinU","pinD","tap","pinLU","pinLD","pinRU","pinRD"];
     var input_arr = [];
-
-    var type_map = {
-      "panup"    : "mark1",
-      "pandown"  : "mark2",
-      "panleft"  : "mark3",
-      "panright" : "mark1",
-      "tap"      : "mark1",
-    }
 
 
     let iSingleTransIndex = 0;
@@ -71,16 +62,14 @@ window.onload = function() {
             checkIndex += 1;
             iSingleTransIndex = 0;
             iTimeTotal += 40;
+            showMarker();
           } else {
             //还有多的需要操作 对当前的两个小飞船进行减速操作
             sp_arr[checkIndex].mSpeed /= 3;
             sp_arr[checkIndex + 1].mSpeed /= 3;
           }
           now_need_type = input_arr[checkIndex][iSingleTransIndex];
-          console.log("now checkIndex %d type %s listen type %s",checkIndex,JSON.stringify(input_arr[checkIndex]),now_need_type);
         }
-
-        //const throtMoveInfomation = _.throttle(moveInfomation,150);
 
         if (bTimeGap) {
           if (evType === now_need_type) {
@@ -151,21 +140,6 @@ window.onload = function() {
       sp.source_radius = plant.selfRadius;
     }
 
-    function addMarker() {
-      for (let i = 0, len = plant_arr.length - 1; i < len; ++i) {
-        const need_type_arr = input_arr[i];
-        let y = 100;
-        const plant_marker_arr = need_type_arr.map((one) => {
-          const mark_name = type_map[one];
-          y += 50;
-          const marker = makePlante(mark_name,0.8,100,y);
-          marker.visible = false;
-          return marker;
-        }) 
-        marker_arr[i] = plant_marker_arr;
-      }
-    }
-
     function newInputType(iCnt = 1) {
       const arr = [];
 
@@ -214,6 +188,11 @@ window.onload = function() {
       sp_arr.push(sp);
     };
 
+    function showMarker() {
+      console.log("checkIndex 0 type %s",JSON.stringify(input_arr[checkIndex]));
+      window.$ui.setArrowArr(input_arr[checkIndex]);
+    }
+
     function create () {
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
         const resizeCallBack = _.throttle(function onResize(scale) {
@@ -235,14 +214,11 @@ window.onload = function() {
         timer.start();
 
         //load plante
-        for (let i = 0; i < 50; ++i) {
+        for (let i = 0; i < 4; ++i) {
           appendPlante();
         }
 
-        //显示操作的图标
-        addMarker();
-
-        console.log("checkIndex 0 type %s",JSON.stringify(input_arr[0]));
+        showMarker();
 
         hammerInit();
     }
@@ -257,11 +233,22 @@ window.onload = function() {
       return now_dist;
     };
 
+    const updateUITimer = () => {
+      window.$ui.setLeftTime(iTimeTotal - game.time.totalElapsedSeconds());
+    };
+
     function update() {
+
+      updateUITimer();
+      //_.throttle(updateUITimer,80);
 
       plant_arr.forEach((one) => {
         one.rotation += one.rotation_speed;
       });
+
+      if (!plant_arr[checkIndex + 5]) {
+          appendPlante();
+      }
 
       sp_arr.forEach((one,index) => {
         if (index === checkIndex || index === checkIndex + 1) {
@@ -272,17 +259,12 @@ window.onload = function() {
         one.children[0].visible = false;
       });
 
-      marker_arr.forEach((one) => {
-        one.visible = false;
-      });
-
       let now_dist = getNowDistance();
       const cp_from = sp_arr[checkIndex];
       const cp_to = sp_arr[checkIndex + 1];
 
       if (now_dist < 200) {
         bTimeGap = true;
-        marker_arr[checkIndex].visible = true;
         cp_from.children[0].visible = true;
         cp_to.children[0].visible = true;
       } else {
