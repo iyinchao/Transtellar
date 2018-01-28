@@ -69,6 +69,7 @@ window.onload = function() {
             checkIndex += 1;
             iSingleTransIndex = 0;
             window.$ui.setSingleIndex(iSingleTransIndex);
+            window.$ui.setFinishPlante(checkIndex);
             iTimeTotal += 10;
             showMarker();
           } else {

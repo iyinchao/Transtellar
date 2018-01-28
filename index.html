@@ -29,7 +29,10 @@
             </div>
             <div class="dead-overlay" v-if="state === 'dead'">
                 <img class="cute-alien" src="assets/cute-alien.png">
-                <button class="bt bt-yellow btn-restart" @click="onBtRestart">Re Start</button>
+                <div class="result-text" v-if="iFinishPlant"> {{iFinishPlant}} planets have known your civilization. </div>
+                <div class="result-text" v-else> No planets have known your civilization.You are Alone.Try Harder !</div>
+                <button class="bt bt-yellow btn-restart" @click="onBtRestart">ReStart</button>
+                <button class="bt bt-blue btn-gohome" @click="onBtnGoHome">Home</button>
             </div>
             <div class="page intro" v-if="state === 'intro'" :class="{'active':introActive}">
                 <div class="logo-wrapper" ref="logoWrapper">
