@@ -31,8 +31,8 @@
                 <img class="cute-alien" src="assets/cute-alien.png">
                 <div class="result-text" v-if="iFinishPlant"> Congrats! <br> {{iFinishPlant}} planets have known your civilization. </div>
                 <div class="result-text" v-else> No planets have known your civilization.You are Alone.Try Harder !</div>
-                <button class="bt bt-yellow btn-restart" @click="onBtRestart">ReStart</button>
-                <button class="bt bt-blue btn-gohome" @click="onBtnGoHome">Home</button>
+                <button class="bt bt-yellow btn-restart" @click="onBtRestart">Restart</button>
+                <button class="bt bt-blue btn-gohome" @click="onBtnGoHome">Back Home</button>
             </div>
             <div class="page intro" v-if="state === 'intro'" :class="{'active':introActive}">
                 <div class="logo-wrapper" ref="logoWrapper">
