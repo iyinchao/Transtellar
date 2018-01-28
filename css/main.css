@@ -27,6 +27,66 @@ body {
 	height: 100vh;
 }
 
+#ui .time-line {
+    font-family : hand;
+    font-size : 24px;
+	position: absolute;
+	left: 3%;
+    top : 1%;
+    width : 100%;
+}
+
+#ui .arrow-line {
+	position: absolute;
+	left: 30%;
+    top : 4%;
+    width : 100%;
+}
+
+#ui .arrow-line .marker {
+    width : 60px;
+    height : 60px;
+    display : inline-block;
+    background-position : center;
+	background-size: contain;
+}
+
+#ui .arrow-line .mark-1 {
+    background-image : url("../assets/marker_1.png");
+}
+#ui .arrow-line .mark-2 {
+    background-image : url("../assets/marker_2.png");
+    transform : rotate(45deg);
+}
+#ui .arrow-line .mark-3 {
+    background-image : url("../assets/marker_3.png");
+    transform : rotate(90deg);
+}
+#ui .arrow-line .mark-4 {
+    background-image : url("../assets/marker_4.png");
+    transform : rotate(135deg);
+}
+#ui .arrow-line .mark-5 {
+    background-image : url("../assets/marker_5.png");
+    transform : rotate(180deg);
+}
+#ui .arrow-line .mark-6 {
+    background-image : url("../assets/marker_6.png");
+    transform : rotate(225deg);
+}
+#ui .arrow-line .mark-7 {
+    background-image : url("../assets/marker_7.png");
+    transform : rotate(270deg);
+}
+#ui .arrow-line .mark-8 {
+    background-image : url("../assets/marker_8.png");
+    transform : rotate(315deg);
+}
+#ui .arrow-line .mark-9 {
+    background-image : url("../assets/marker_9.png");
+    transform : rotate(360deg);
+}
+
 .logo-wrapper {
 	width: 100vw;
 	height: 100vh;

@@ -6,7 +6,9 @@ function initVue() {
         data: function () {
             return {
                 state: 'intro',
-                introActive: false
+                introActive: false,
+                arrowArr : [],
+                nowTime : 0,
             }
         },
         watch: {
@@ -35,6 +37,30 @@ function initVue() {
             setState : function(stateName) {
                 this.state = stateName;
             },
+            setLeftTime : function(t) {
+                this.nowTime = t;
+            },
+            setArrowArr : function(arr) {
+              var type_map = {
+                "pinU"  : "mark-1",
+                "pinRU" : "mark-2",
+                "pinR"  : "mark-3",
+                "pinRD" : "mark-4",
+                "pinD"  : "mark-5",
+                "pinLD" : "mark-6",
+                "pinL"  : "mark-7",
+                "pinLU" : "mark-8",
+                "tap"   : "mark-9",
+              }
+
+              this.arrowArr = [];
+              arr.forEach((one) => {
+                console.log("add %s",one);
+                if (type_map[one]) {
+                  this.arrowArr.push(type_map[one]);
+                }
+              });
+            }
         },
         mounted () {
             if (this.state === 'intro') {
