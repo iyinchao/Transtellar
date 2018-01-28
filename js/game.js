@@ -101,7 +101,7 @@ window.onload = function() {
     }
 
     function preload () {
-        for (let i = 1 ; i <= 6; ++i) {
+        for (let i = 1 ; i <= 7; ++i) {
           game.load.image(`ball${i}`, `assets/ball-${i}.png`);
         }
         game.load.image('ball-ring', 'assets/ball-ring-1.png');
@@ -160,7 +160,7 @@ window.onload = function() {
     }
 
     const appendPlante = () => {
-      const random_ball = `ball${_.random(1,6)}`;
+      const random_ball = `ball${_.random(1,7)}`;
       const random_radius = _.random(0.2,0.35);
       let new_x = 5000;
       let new_y = 200;
