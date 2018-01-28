@@ -18,7 +18,7 @@
     <script type="text/x-template" id="vue-root">
         <div id="ui">
             <div class="ui-overlay" v-if="state === 'gaming'">
-                <div class="arrow-line">
+                <div class="arrow-line" :class="{hard : bHard}">
                     <div v-for="(one,index) in arrowArr" :class='[one, index < iSingleTransIndex ? "finish" : ""]' class="marker">
                     </div>
                 </div>
@@ -54,7 +54,7 @@
                         <div class="pc pc-3" style="background-image: url('/assets/img/pc-3.png')"></div>
                     </div>
                     <button class="bt bt-blue" id="bt-start" ref="btStart" @click="onBtStartClick">Start Game</button>
-                    <button class="bt bt-yellow" id="bt-hard">Hard Mode</button>
+                    <button class="bt bt-yellow" id="bt-hard" @click="onHardStartClick">Hard Mode</button>
                 </div>
             </div>
             <div class="page" v-if="state === 'over'"></div>

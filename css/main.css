@@ -86,7 +86,7 @@ button.bt.bt-yellow {
 
 #ui .arrow-line {
 	position: absolute;
-    top : 4%;
+    top : 40px;
     width : 100%;
     display :flex;
 }
@@ -166,6 +166,43 @@ button.bt.bt-yellow {
 #ui .arrow-line .mark-9 {
     background-image : url("../assets/marker_9.png");
     transform : rotate(360deg);
+}
+
+#ui .arrow-line.hard .mark-1 {
+    background-image : url("../assets/marker_1_h.png");
+    transform : initial;
+}
+#ui .arrow-line.hard .mark-2 {
+    background-image : url("../assets/marker_2_h.png");
+    transform : initial;
+}
+#ui .arrow-line.hard .mark-3 {
+    background-image : url("../assets/marker_3_h.png");
+    transform : initial;
+}
+#ui .arrow-line.hard .mark-4 {
+    background-image : url("../assets/marker_4_h.png");
+    transform : initial;
+}
+#ui .arrow-line.hard .mark-5 {
+    background-image : url("../assets/marker_5_h.png");
+    transform : initial;
+}
+#ui .arrow-line.hard .mark-6 {
+    background-image : url("../assets/marker_6_h.png");
+    transform : initial;
+}
+#ui .arrow-line.hard .mark-7 {
+    background-image : url("../assets/marker_7_h.png");
+    transform : initial;
+}
+#ui .arrow-line.hard .mark-8 {
+    background-image : url("../assets/marker_8_h.png");
+    transform : initial;
+}
+#ui .arrow-line.hard .mark-9 {
+    background-image : url("../assets/marker_9_h.png");
+    transform : initial;
 }
 
 .logo-wrapper {

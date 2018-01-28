@@ -10,6 +10,7 @@ function initVue() {
                 arrowArr : [],
                 iSingleTransIndex : 0,
                 nowTime : 0,
+                bHard : false,
             }
         },
         watch: {
@@ -43,8 +44,15 @@ function initVue() {
                 }
             },
             onBtStartClick () {
-                window.$game.state.start('gaming')
-                this.setState('gaming')
+              this.bHard = false;
+              window.$game.state.start('gaming')
+              this.setState('gaming')
+            },
+
+            onHardStartClick () {
+              this.bHard = true;
+              window.$game.state.start('gaming')
+              this.setState('gaming')
             },
 
             onBtRestart () {
