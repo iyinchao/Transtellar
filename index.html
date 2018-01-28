@@ -42,6 +42,8 @@
                     <div class="pc-wrapper pc-3-wrapper">
                         <div class="pc pc-3" style="background-image: url('/assets/img/pc-3.png')"></div>
                     </div>
+                    <button class="bt bt-blue" id="bt-start" ref="btStart" @click="onBtStartClick">Start Game</button>
+                    <button class="bt bt-yellow" id="bt-hard">Hard Mode</button>
                 </div>
             </div>
             <div class="page" v-if="state === 'over'"></div>
