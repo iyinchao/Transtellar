@@ -23,16 +23,28 @@ function initVue() {
                     setTimeout(() => {
                         this.introActive = true
                     }, 300)
+                    this.$nextTick(() => {
+                        this.onWindowResizeThrottle()
+                    })
+                } else {
+                    this.introActive = false
                 }
             },
             onWindowResizeThrottle () {
-                if (document.body.clientHeight > document.body.clientWidth) {
-                    this.$refs.logoWrapper.style.height = '100vw';
-                    this.$refs.logoWrapper.style.width = '100vw';
-                } else {
-                    this.$refs.logoWrapper.style.height = '100vh';
-                    this.$refs.logoWrapper.style.width = '100vh';
+                if (this.$refs.logoWrapper) {
+                    if (document.body.clientHeight > document.body.clientWidth) {
+                        this.$refs.logoWrapper.style.height = '100vw';
+                        this.$refs.logoWrapper.style.width = '100vw';
+                    } else {
+                        this.$refs.logoWrapper.style.height = '100vh';
+                        this.$refs.logoWrapper.style.width = '100vh';
+                    }
                 }
+                
+            },
+            onBtStartClick () {
+                window.$game.state.start('gaming')
+                this.setState('gaming')
             },
             setState : function(stateName) {
                 this.state = stateName;

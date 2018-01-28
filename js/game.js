@@ -20,12 +20,12 @@ window.onload = function() {
     var height = window.innerHeight;
 
     var canvasWrapper = document.querySelector('#canvas-wrapper')
-    var game = new Phaser.Game(width, height, Phaser.AUTO, canvasWrapper, { preload: preload, create: create ,update: update, render: render}, true, true);
+    var game = new Phaser.Game(width, height, Phaser.AUTO, canvasWrapper, null, true, true);
     window.$game = game;
 
     initVue()
 
-    window.$ui.setState("gaming");
+    // window.$ui.setState("gaming");
 
     var deviceRatio = window.devicePixelRatio || 1
 
@@ -329,5 +329,15 @@ window.onload = function() {
     function render() {
       //game.debug.cameraInfo(game.camera, 32, 64)
     }
+
+    var states = {
+      idle: {},
+      gaming: { preload: preload, create: create , update: update, render: render}
+    }
+
+    game.state.add('gaming', states.gaming)
+    game.state.add('idle', states.idle)
+
+    game.state.start('idle')
 
 };
