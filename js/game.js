@@ -14,7 +14,7 @@ const smCamScale = new Smoother({
 })
 
 const INCR_INPUT_NUM_BY_PLANT_NUM = 8;
-const START_GAME_TOTAL_TIME = 2;
+const START_GAME_TOTAL_TIME = 100;
 
 window.onload = function() {
     var width = window.innerWidth;
@@ -228,6 +228,9 @@ window.onload = function() {
         resizeCallBack.call(this, this.scale)
         game.world.setBounds(0, 0, 10000, 10000)
         
+        var bgm = game.add.audio('bgm');
+        bgm.loop = true;
+        bgm.play();
         hitSound = game.add.audio('hit_sound');
         missSound = game.add.audio('miss_sound');
 
