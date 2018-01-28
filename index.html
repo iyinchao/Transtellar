@@ -25,6 +25,7 @@
                 <div class="time-line">
                     Time Left: {{nowTime.toFixed(1)}}
                 </div>
+                <div class="loading" v-if="loadingActive">Loading...</div>
             </div>
             <div class="dead-overlay" v-if="state === 'dead'">
                 <img class="cute-alien" src="assets/cute-alien.png">

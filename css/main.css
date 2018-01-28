@@ -73,6 +73,20 @@ button.bt.bt-yellow {
 	max-height: 100vh;
 	width: 100vw;
 	height: 100vh;
+	overflow: hidden;
+}
+
+#ui {
+	overflow: hidden;
+}
+
+.loading {
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	position: absolute;
+	font-size: 31px;
+	font-family: hand;
 }
 
 #ui .time-line {
