@@ -8,6 +8,7 @@ function initVue() {
                 state: 'intro',
                 introActive: false,
                 arrowArr : [],
+                iSingleTransIndex : 0,
                 nowTime : 0,
             }
         },
@@ -40,7 +41,6 @@ function initVue() {
                         this.$refs.logoWrapper.style.width = '100vh';
                     }
                 }
-                
             },
             onBtStartClick () {
                 window.$game.state.start('gaming')
@@ -52,10 +52,13 @@ function initVue() {
                 this.setState('gaming')
             },
             setState : function(stateName) {
-                this.state = stateName;
+              this.state = stateName;
             },
             setLeftTime : function(t) {
-                this.nowTime = t;
+              this.nowTime = t;
+            },
+            setSingleIndex : function(n) {
+              this.iSingleTransIndex = n;
             },
             setArrowArr : function(arr) {
               var type_map = {

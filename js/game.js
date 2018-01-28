@@ -68,6 +68,7 @@ window.onload = function() {
             const iNowDist = parseInt(getNowDistance());
             checkIndex += 1;
             iSingleTransIndex = 0;
+            window.$ui.setSingleIndex(iSingleTransIndex);
             iTimeTotal += 10;
             showMarker();
           } else {
@@ -82,6 +83,7 @@ window.onload = function() {
           if (evType === now_need_type) {
             console.log("hit %s",now_need_type);
             iSingleTransIndex++;
+            window.$ui.setSingleIndex(iSingleTransIndex);
             moveInfomation();
             //throtMoveInfomation();
           } else {
@@ -265,6 +267,7 @@ window.onload = function() {
       bTimeGap = false;
       checkIndex = 0;
       iSingleTransIndex = 0;
+      window.$ui.setSingleIndex(iSingleTransIndex);
       iTimeTotal = START_GAME_TOTAL_TIME;
 
       game.state.start("idle");
@@ -328,6 +331,7 @@ window.onload = function() {
         cp_to.children[0].visible = true;
       } else {
         iSingleTransIndex = 0;
+        window.$ui.setSingleIndex(iSingleTransIndex);
         bTimeGap = false;
       }
 

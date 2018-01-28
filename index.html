@@ -19,7 +19,7 @@
         <div id="ui">
             <div class="ui-overlay" v-if="state === 'gaming'">
                 <div class="arrow-line">
-                    <div v-for="one in arrowArr" :class="one" class="marker">
+                    <div v-for="(one,index) in arrowArr" :class='[one, index < iSingleTransIndex ? "finish" : ""]' class="marker">
                     </div>
                 </div>
                 <div class="time-line">

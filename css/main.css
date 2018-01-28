@@ -91,6 +91,10 @@ button.bt.bt-yellow {
     display :flex;
 }
 
+#ui .arrow-line .finish{
+    opacity : 0.4;
+}
+
 #ui .arrow-line::after,#ui .arrow-line::before {
     flex : 1;
     display : block;
