@@ -61,7 +61,7 @@ window.onload = function() {
             const iNowDist = parseInt(getNowDistance());
             checkIndex += 1;
             iSingleTransIndex = 0;
-            iTimeTotal += 40;
+            iTimeTotal += 10;
             showMarker();
           } else {
             //还有多的需要操作 对当前的两个小飞船进行减速操作
