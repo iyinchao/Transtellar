@@ -111,7 +111,7 @@ function initVue() {
 
               this.arrowArr = [];
               arr.forEach((one) => {
-                console.log("add %s",one);
+                //console.log("add %s",one);
                 if (type_map[one]) {
                   this.arrowArr.push(type_map[one]);
                 }

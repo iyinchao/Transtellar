@@ -84,14 +84,14 @@ window.onload = function() {
 
         if (bTimeGap) {
           if (evType === now_need_type) {
-            console.log("hit %s",now_need_type);
+            //console.log("hit %s",now_need_type);
             iSingleTransIndex++;
             window.$ui.setSingleIndex(iSingleTransIndex);
             moveInfomation();
             //throtMoveInfomation();
           } else {
             window.$ui.setTimeLineColor(false);
-            iTimeTotal -= 8;
+            iTimeTotal -= 10;
             missSound.play();
           }
         }
@@ -200,13 +200,13 @@ window.onload = function() {
     };
 
     function showMarker() {
-      console.log("checkIndex 0 type %s",JSON.stringify(input_arr[checkIndex]));
+      //console.log("checkIndex 0 type %s",JSON.stringify(input_arr[checkIndex]));
       window.$ui.setArrowArr(input_arr[checkIndex]);
     }
 
     function create () {
 
-        console.log("game created");
+        //console.log("game created");
 
         game.bGameOver = false;
 
@@ -284,7 +284,9 @@ window.onload = function() {
 
       game.state.start("idle");
 
-      bgm.stop();
+      bgm.destroy();
+      hitSound.destroy();
+      missSound.destroy();
     };
 
 
