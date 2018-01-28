@@ -108,6 +108,7 @@ button.bt.bt-yellow {
 }
 
 #ui .arrow-line {
+    pointer-events : none;
 	position: absolute;
     top : 40px;
     width : 100%;

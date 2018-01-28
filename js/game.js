@@ -14,7 +14,7 @@ const smCamScale = new Smoother({
 })
 
 const INCR_INPUT_NUM_BY_PLANT_NUM = 8;
-const START_GAME_TOTAL_TIME = 100;
+const START_GAME_TOTAL_TIME = 2;
 
 window.onload = function() {
     var width = window.innerWidth;
@@ -70,6 +70,7 @@ window.onload = function() {
             iSingleTransIndex = 0;
             window.$ui.setSingleIndex(iSingleTransIndex);
             window.$ui.setFinishPlante(checkIndex);
+            window.$ui.setTimeLineColor(true);
             iTimeTotal += 10;
             showMarker();
           } else {
@@ -88,7 +89,8 @@ window.onload = function() {
             moveInfomation();
             //throtMoveInfomation();
           } else {
-            iTimeTotal -= 20;
+            window.$ui.setTimeLineColor(false);
+            iTimeTotal -= 8;
             missSound.play();
           }
         }
@@ -166,7 +168,7 @@ window.onload = function() {
         new_x = last_plant.x + _.random(50,100) * (_.shuffle([-1,1])[0]);
         new_y = last_plant.y + random_radius * 400 + 100; // 两个飞船的大小;
 
-        const default_start_input = [["tap"],["pinU"],["pinD"],["pinL"],["pinR"]];
+        const default_start_input = [["pinL"],["pinU"],["pinD"],["tap"],["pinR"]];
         const input_arr_index = input_arr.length;
         if (default_start_input[input_arr_index]) {
           input_arr.push(default_start_input[input_arr_index]);
@@ -291,7 +293,6 @@ window.onload = function() {
       const leftTime = iTimeTotal - getStartedTime();
       if (leftTime <= 0) {
         window.$ui.setLeftTime(0);
-        window.$ui.setState("dead");
         return true;
       }
       frameCount++;
@@ -305,8 +306,15 @@ window.onload = function() {
 
       let bDead = updateUITimer();
       if (bDead) {
-        game.bGameOver = true;
-        resetGame();
+        game.paused = true;
+
+        setTimeout(function(){
+          game.paused = false;
+          window.$ui.setState("dead");
+          game.bGameOver = true;
+          resetGame();
+        },3000);
+
         return;
       }
 

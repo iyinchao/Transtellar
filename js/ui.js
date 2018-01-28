@@ -81,6 +81,18 @@ function initVue() {
             setLeftTime : function(t) {
               this.nowTime = t;
             },
+
+            setTimeLineColor : function(bAdd = true) {
+              if (bAdd) {
+                this.$refs.timeLine.style.color = "green";
+              } else {
+                this.$refs.timeLine.style.color = "red";
+              }
+              let _this = this;
+              setTimeout(function(){
+                _this.$refs.timeLine.style.color = "black";
+              },1500);
+            },
             setSingleIndex : function(n) {
               this.iSingleTransIndex = n;
             },
