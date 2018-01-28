@@ -33,6 +33,7 @@ window.onload = function() {
     game.bGameOver = false;
     var missSound;
     var hitSound;
+    var bgm;
 
     let dtStartTime = 0; 
 
@@ -226,7 +227,7 @@ window.onload = function() {
         resizeCallBack.call(this, this.scale)
         game.world.setBounds(0, 0, 10000, 10000)
         
-        var bgm = game.add.audio('bgm');
+        bgm = game.add.audio('bgm');
         bgm.loop = true;
         bgm.play();
         hitSound = game.add.audio('hit_sound');
@@ -280,6 +281,8 @@ window.onload = function() {
       iTimeTotal = START_GAME_TOTAL_TIME;
 
       game.state.start("idle");
+
+      bgm.stop();
     };
 
 
