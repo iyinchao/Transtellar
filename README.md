@@ -10,6 +10,7 @@ within 40hrs.
 ## Online demo
 
 <div align="center"><img width="100px" src=".github/QR.jpg" alt="Transtellart Logo"></img></div>
+
 You can also serve this repo as static website and open `/index.html` to play.
 
 ## Game play
