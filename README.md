@@ -1,6 +1,6 @@
 # :rocket: :new_moon_with_face: Transtellar
 
-<div align="center"><img src=".github/logo.jpg" alt="Transtellart Logo"></img></div>
+<div align="center"><img src=".github/logo.jpg" alt="Transtellar Logo"></img></div>
 
 The game work of [Global Game Jame 2018](https://globalgamejam.org/2018) (Theme: [transmission](https://globalgamejam.org/theme-2018))
 
@@ -9,7 +9,7 @@ within 40hrs.
 
 ## Online demo
 
-<div align="center"><img width="100px" src=".github/QR.jpg" alt="Transtellart Logo"></img></div>
+<div align="center"><img width="100px" src=".github/QR.jpg" alt="QR Code"></img></div>
 
 You can also serve this repo as static website and open `/index.html` to play.
 
@@ -27,16 +27,16 @@ Your time is limited, with each successful transmission, you will get 10s bonus,
 
 ### Behind the scene
 
-<div align="center"><img width="100%" src=".github/how-it-is-made.jpg" alt="Transtellart Logo"></img></div>  
+<div align="center"><img width="100%" src=".github/how-it-is-made.jpg" alt="How it is made"></img></div>  
 <br>
 
-Without dedicated artist persion, our team basiclly made up of programmer and product designer. And due to some schedule reasons, Qin Li and I only got time to work on this 9hrs after the theme was announced.
+Without dedicated artist persion, our team is basiclly made up of programmer and product designer. And due to some schedule reasons, Qin Li and I only got time to work on this 9hrs after the theme was announced.
 
-Thankfully we got colored pencils and paper, and because of that, we figured out that we can draw by hand instead of mouse, and take pictures using a cell phone to turn these drawings as game asset. So we were able to finish the main develop process about 1 hour before the deadline:sunglasses:.
+Thankfully we got colored pencil and paper, and because of that, we figured out that we can draw by hand instead of mouse, and take pictures using a cell phone to turn these drawings into game assets. Finally we were able to finish the main develop process about 1 hour before the deadline:sunglasses:.
 
 ### Made with
 
 * Phaser.js
 * Vue.js for fast UI construction
-* Colored pencil, paper & :camera: for art
+* Colored pencil, paper & :iphone: for art
 * :heart:
